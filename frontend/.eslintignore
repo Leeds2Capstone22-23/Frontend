@@ -1,6 +1,0 @@
-node_modules
-dist
-build
-.eslintrc.js
-src/serviceWorker.ts
-*.svg
