@@ -8,7 +8,7 @@ import { VirtualElement } from '../types/types';
 import detectHighlight from '../logic/detectHighlight';
 import '../styling/main.css';
 
-export default function documentPage() {
+export default function DocumentPage() {
   // -----
   // STATE VARS
   // -----
