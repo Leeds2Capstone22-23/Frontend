@@ -12,7 +12,7 @@ import './AppBar.css';
 
 const pages = ['Documents', 'Tags'];
 
-function responsiveAppBar() {
+function ResponsiveAppBar() {
   return (
     <AppBar position="static">
       <Container
@@ -55,4 +55,4 @@ function responsiveAppBar() {
     </AppBar>
   );
 }
-export default responsiveAppBar;
+export default ResponsiveAppBar;
