@@ -7,5 +7,9 @@ module.exports = {
       '<rootDir>/mocks/fileMock.js',
     '\\.(css|less)$': '<rootDir>/mocks/styleMock.js',
   },
-  
+  coverageThreshold: {
+    global: {
+      lines: 80,
+    },
+  },
 };
