@@ -1,5 +1,6 @@
 
-import {Status} from '../types/types'
+import { labelFailed, labelLoading, labelSuccess } from '../redux/reducers/labelReducer';
+import {Label, Status} from '../types/types'
 
 /**
  * This is the main function that actually queries the API
@@ -35,11 +36,9 @@ export async function fetchData(
 '  '-'  '-.'  '-'  '|  `---.|  |\  \ |  ||  `---..-'    |
  `-----'--' `-----' `------'`--' '--'`--'`------'`-----'
 */
-  export async function retrieveAllLabels(
-    setStatus:Function,
-    setData:Function
-  ) {
-    setStatus(Status.Loading)
+  export async function retrieveAllLabels(dispatch: Function) {
+    let storage:Label[] = [];
+    dispatch(labelLoading());
     await fetchData(
       `
       query {
@@ -52,12 +51,17 @@ export async function fetchData(
       .then((result) => {
         // Convert to appropriate data type
         if (result.data) {
-            setData(result.data.labels)
-            setStatus(Status.Succeeded)
+            //we have data
+            dispatch(labelSuccess());
+            storage = result.data.labels as Label[];
         } else {
-            setStatus(Status.Failed)
+            //Case if the actual api returns an error
+            dispatch(labelFailed());
         }
-      });
+      })
+        //case if the fetch request from frontend to backend fails
+      .catch(() => { dispatch(labelFailed()); });
+    return storage;
   }
 
 

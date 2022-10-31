@@ -1,17 +1,20 @@
 import { Button, CircularProgress, TextField } from '@mui/material';
-import {createNewLabel, retrieveAllLabels} from '../logic/apiRequest'
+import {createNewLabel} from '../logic/apiRequest'
+import { LabelData, LabelStatus } from '../redux/hooks/labelHook';
 import React, { useState } from 'react';
-import { Status } from '../types/types';
+import { Label, Status } from '../types/types';
 
 export default function HomePage() {
-    const [labelData, setLabelData] = useState([]);
-    const [labelStatus, setLabelStatus] = useState(Status.Initial);
-
+    // ** STATE **
+    const [refreshLabels, setRefreshLabels] = useState(false);
     const [labelName, setLabelName] = useState("");
     const [labelCreationStatus, setLabelCreationStatus] = useState(Status.Initial);
 
-    let labelContent;
+    // ** REDUX ** 
+    const labelStatus:Status = LabelStatus();
+    const labelData:Label[] = LabelData(refreshLabels);
 
+    let labelContent;
     if (labelStatus === Status.Initial) {
         labelContent = (<h1>Haven't Requested Data Yet</h1>)
     } else if (labelStatus === Status.Loading) {
@@ -45,7 +48,12 @@ export default function HomePage() {
                 />
                 <br/><br/>
                 <Button
-                onClick={() => {createNewLabel(setLabelCreationStatus, labelName)}}
+                onClick={() => {
+                    createNewLabel(setLabelCreationStatus, labelName).then(() => {
+                        setRefreshLabels(true);
+                    })
+                    
+                }}
                 variant="contained"
                 >
                     Create New Label
@@ -71,13 +79,6 @@ export default function HomePage() {
        Home Example
     </div>
     {labelCreationContent}<br /><br/><br/>
-    <Button
-    onClick={() => {retrieveAllLabels(setLabelStatus, setLabelData)}}
-    variant="contained"
-    >
-        Load All Labels
-    </Button>
-    
     {labelContent}
     </>
   );
