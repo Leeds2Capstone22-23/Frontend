@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { exampleReducer } from './reducers/exampleReducer';
+import { labelDataReducer, labelStatusReducer } from './reducers/labelReducer';
 
 // This is our main store
 export const defaultStore = configureStore({
   reducer: {
-    exampleReducer
+    exampleReducer,
+    labelDataReducer,
+    labelStatusReducer,
   },
 });
 
