@@ -23,7 +23,7 @@ export default function UploadDoc() {
     } else if (docStatus === Status.Succeeded) {
         docList = (
             docData.map((doc:any) => {
-                return (<p key={doc.id}>{doc.title} - {doc.content}</p>)
+                return (<h3 key={doc.id}>{doc.title}</h3>)
             })
         )
     } else (
