@@ -83,7 +83,7 @@ export async function fetchData(
         if (result.data) {
             //we have data
             dispatch(docSuccess());
-            storage = result.data.documents as Doc[];
+            storage = result.data.labels as Doc[];
         } else {
             //Case if the actual api returns an error
             dispatch(docFailed());
@@ -135,7 +135,7 @@ export async function createNewLabel(
     await fetchData(
       `
       mutation {
-        insert_documents(objects: {title: "${title}", content: """${content}"""}) {
+        insert_documents(objects: {title: "${title}", content: "${content}"}) {
           affected_rows
         }
       }`,
