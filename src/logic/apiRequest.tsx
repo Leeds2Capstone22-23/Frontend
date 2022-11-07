@@ -1,6 +1,7 @@
 
 import { labelFailed, labelLoading, labelSuccess } from '../redux/reducers/labelReducer';
-import {Label, Status} from '../types/types'
+import { docFailed, docLoading, docSuccess } from '../redux/reducers/docReducer';
+import {Label, Doc, Status} from '../types/types'
 
 /**
  * This is the main function that actually queries the API
@@ -64,6 +65,35 @@ export async function fetchData(
     return storage;
   }
 
+  export async function retrieveAllDocs(dispatch: Function) {
+    let storage:Doc[] = [];
+    dispatch(docLoading());
+    await fetchData(
+      `
+      query {
+        documents {
+          id
+          title
+          content
+        }
+      }`,
+    )
+      .then((result) => {
+        // Convert to appropriate data type
+        if (result.data) {
+            //we have data
+            dispatch(docSuccess());
+            storage = result.data.labels as Doc[];
+        } else {
+            //Case if the actual api returns an error
+            dispatch(docFailed());
+        }
+      })
+        //case if the fetch request from frontend to backend fails
+      .catch(() => { dispatch(docFailed()); });
+    return storage;
+  }
+
 
 /*
 ,--.   ,--.,--. ,--.,--------. ,---. ,--------.,--. ,-----. ,--.  ,--. ,---.
@@ -82,6 +112,30 @@ export async function createNewLabel(
       `
       mutation {
         insert_labels(objects: {color: 10, name: "${labelName}"}) {
+          affected_rows
+        }
+      }`,
+    )
+      .then((result) => {
+        // Convert to appropriate data type
+        if (result.data) {
+            setStatus(Status.Succeeded)
+        } else {
+            setStatus(Status.Failed)
+        }
+      });
+  }
+
+  export async function createNewDoc(
+    setStatus:Function,
+    title:string,
+    content:string
+  ) {
+    setStatus(Status.Loading)
+    await fetchData(
+      `
+      mutation {
+        insert_documents(objects: {title: "${title}", content: "${content}"}) {
           affected_rows
         }
       }`,

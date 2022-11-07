@@ -3,6 +3,7 @@ import {createNewLabel} from '../logic/apiRequest'
 import { LabelData, LabelStatus } from '../redux/hooks/labelHook';
 import React, { useState } from 'react';
 import { Label, Status } from '../types/types';
+import UploadDoc from './UploadDoc';
 
 export default function HomePage() {
     // ** STATE **
@@ -80,6 +81,12 @@ export default function HomePage() {
     </div>
     {labelCreationContent}<br /><br/><br/>
     {labelContent}
+
+    <br/>
+    <hr/>
+    <br/>
+
+    <UploadDoc/>
     </>
   );
 }
