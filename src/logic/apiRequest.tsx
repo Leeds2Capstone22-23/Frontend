@@ -1,11 +1,7 @@
 
 import { labelFailed, labelLoading, labelSuccess } from '../redux/reducers/labelReducer';
 import { docFailed, docLoading, docSuccess } from '../redux/reducers/docReducer';
-import { Label, Doc, Status, newUserRegistration, newUserLogin} from '../types/types'
-import { defaultStore } from '../redux';
-import { Buffer } from "buffer";
-import { authFailed, authLoading, authSuccess, saveAuth } from '../redux/reducers/authReducer';
-
+import {Label, Doc, Status} from '../types/types'
 
 /**
  * This is the main function that actually queries the API
@@ -137,7 +133,7 @@ export async function checkUserRegistration(loginInfo: newUserLogin, dispatch: F
         if (result.data) {
             //we have data
             dispatch(docSuccess());
-            storage = result.data.documents as Doc[];
+            storage = result.data.labels as Doc[];
         } else {
             //Case if the actual api returns an error
             dispatch(docFailed());
@@ -147,7 +143,6 @@ export async function checkUserRegistration(loginInfo: newUserLogin, dispatch: F
       .catch(() => { dispatch(docFailed()); });
     return storage;
   }
-
 
 
 /*
@@ -250,7 +245,7 @@ export async function createNewLabel(
     await fetchData(
       `
       mutation {
-        insert_documents(objects: {title: "${title}", content: """${content}"""}) {
+        insert_documents(objects: {title: "${title}", content: "${content}"}) {
           affected_rows
         }
       }`,
