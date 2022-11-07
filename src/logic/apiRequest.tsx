@@ -83,7 +83,7 @@ export async function fetchData(
         if (result.data) {
             //we have data
             dispatch(docSuccess());
-            storage = result.data.labels as Doc[];
+            storage = result.data.documents as Doc[];
         } else {
             //Case if the actual api returns an error
             dispatch(docFailed());
