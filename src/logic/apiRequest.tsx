@@ -250,7 +250,7 @@ export async function createNewLabel(
     await fetchData(
       `
       mutation {
-        insert_documents(objects: {title: "${title}", content: "${content}"}) {
+        insert_documents(objects: {title: "${title}", content: """${content}"""}) {
           affected_rows
         }
       }`,
