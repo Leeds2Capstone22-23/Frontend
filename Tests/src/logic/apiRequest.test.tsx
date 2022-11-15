@@ -14,6 +14,7 @@ test('Does retrieveAllLabels work?', async () => {
         .then((response:any) => {
             labels = response
         });
+    expect(labels[0].name).toEqual('Label 1');
     expect(labels.length).toEqual(3);
 }); 
 
