@@ -42,7 +42,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "jest --maxWorkers 1",
     "test-coverage": "jest --coverage --watchAll=False --ci",
     "eject": "react-scripts eject",
     "lint-fix": "eslint --fix --ext .js,.ts,.tsx ./",
