@@ -9,8 +9,9 @@ module.exports = {
   },
   coverageThreshold: {
     global: {
-      lines: 50,
+      lines: 80,
     },
   },
-  collectCoverage: true
+  collectCoverage: true,
+  setupFiles: ['<rootDir>/Tests/Mocks/apiRequestMock.tsx'],
 };

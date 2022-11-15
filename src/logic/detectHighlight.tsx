@@ -20,7 +20,6 @@ export default function detectHighlight(
   const virtualElement = {
     getBoundingClientRect: generateGetBoundingClientRect(),
   };
-
   if (selectedText && selectedText.length > 0) {
     const selectionRect = selection!.getRangeAt(0).getBoundingClientRect();
     if (selectionRect) {

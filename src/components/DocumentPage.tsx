@@ -8,10 +8,12 @@ import { VirtualElement } from '../types/types';
 import detectHighlight from '../logic/detectHighlight';
 import '../styling/main.css';
 
+
 export default function DocumentPage() {
   // -----
   // STATE VARS
   // -----
+  const [showTagOptions, setShowTagOptions] = useState(false);
   const [
     selectionVirtualElement,
     setSelectionVirtualElement,
@@ -21,7 +23,6 @@ export default function DocumentPage() {
     setSavedSelectionLocation,
   ] = useState<VirtualElement | undefined>();
   const [selectionRange, setSelectionRange] = useState<Range | undefined>();
-  const [showTagOptions, setShowTagOptions] = useState(false);
   const [tagName, setTagName] = useState('');
   const [tagDescription, setTagDescription] = useState('');
 
@@ -46,7 +47,8 @@ export default function DocumentPage() {
   }, [showTagOptions, selectionVirtualElement]);
 
   let tagOptions;
-
+  //Ignore this branch as it is impossible to test for popper with jsdom
+  /* istanbul ignore next */
   if (showTagOptions) {
     tagOptions = (
         <Box
@@ -103,7 +105,6 @@ export default function DocumentPage() {
             <Button
                 variant="contained"
                 onClick={() => {
-                  console.log('Name: ', tagName, 'Description: ', tagDescription);
                   setShowTagOptions(false);
                   setTagName('');
                   setTagDescription('');

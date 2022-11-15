@@ -16,7 +16,7 @@ export default function App() {
         <Routes>
             <Route path="/" element={<HomePage />}/>
             <Route path="/Tags" element={<TagPage />}/>
-            <Route path="/Documents" element={<DocumentPage />}/>
+            <Route path="/Documents" element={<DocumentPage/>}/>
             <Route path="*" element={<Page404 />}/>
         </Routes>
       </BrowserRouter>

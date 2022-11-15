@@ -1,15 +1,17 @@
-import React from 'react';
+import *  as React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import App from '../src/App';
+import HomePage from '../../../src/components/HomePage';
 import { Provider } from 'react-redux';
-import { defaultStore } from '../src/redux';
+import { defaultStore } from '../../../src/redux';
+
 
 test('renders message', () => {
   render(
     <Provider store={defaultStore}>
-        <App />
-    </Provider>);
-  const linkElement = screen.getAllByText(/Home/i);
+        <HomePage />
+    </Provider>
+  );
+  const linkElement = screen.getAllByText(/Label 1/i);
   expect(linkElement[0]).toBeInTheDocument();
 });
