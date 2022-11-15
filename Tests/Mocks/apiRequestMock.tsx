@@ -1,4 +1,4 @@
-import { Label, UserAuth } from "../../src/types/types";
+import { Label } from "../../src/types/types";
 import { defaultStore } from "../../src/redux";
 
 
@@ -19,17 +19,8 @@ let testLabelReturn:Label[] = [
     },
 ]
 
-let testUserAuthReturn:UserAuth = {
-    userSecret: '',
-    username: '',
-    fullName: '',
-    userId: -1,
-}
 jest.mock('../../src/logic/apiRequest', () => ({
     fetchData: jest.fn(() => {
-        Promise.resolve();
-    }),
-    checkUserRegistration: jest.fn(() => {
         Promise.resolve();
     }),
     retrieveAllLabels: jest.fn(() => {
@@ -44,7 +35,6 @@ jest.mock('../../src/logic/apiRequest', () => ({
     }),
     createNewLabel: jest.fn(() => {
         Promise.resolve();
-    }),
-    
+    })
 }));
 
