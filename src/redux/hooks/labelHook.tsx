@@ -22,7 +22,6 @@ export function LabelData(forceRefresh = false) {
 
   useEffect(() => {
     // If we haven't loaded data or data loading has failed
-    console.log("Ayyo2")
     if (labelsStatus === Status.Initial || labelsStatus === Status.Failed || forceRefresh) {
       // Fetch apps
       retrieveAllLabels(dispatch)
