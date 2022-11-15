@@ -31,9 +31,6 @@ jest.mock('../../src/logic/apiRequest', () => ({
     fetchData: jest.fn(() => {
         Promise.resolve();
     }),
-    checkUserRegistration: jest.fn(() => {
-        Promise.resolve();
-    }),
     retrieveAllLabels: jest.fn(() => {
         defaultStore.dispatch({
             type: 'labels/status/success',
