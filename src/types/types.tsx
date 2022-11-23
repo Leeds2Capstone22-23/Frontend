@@ -10,3 +10,9 @@ export interface Label {
     id: number,
     name: string,
 }
+
+export interface Doc {
+    id: number,
+    title: string,
+    content: string,
+}
