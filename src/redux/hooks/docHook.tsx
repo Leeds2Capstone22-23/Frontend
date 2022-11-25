@@ -22,7 +22,6 @@ export function DocData(forceRefresh = false) {
 
   useEffect(() => {
     // If we haven't loaded data or data loading has failed
-    console.log(":)")
     if (docsStatus === Status.Initial || docsStatus === Status.Failed || forceRefresh) {
       // Fetch apps
       retrieveAllDocs(dispatch)
