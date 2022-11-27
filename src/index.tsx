@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import AuthHandler from './components/AuthHandler';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { defaultStore } from './redux';
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={defaultStore}>
-        <App />
+        <AuthHandler />
     </Provider>
   </React.StrictMode>,
 );
