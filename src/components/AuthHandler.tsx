@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Alert, Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import App from '../App';
@@ -25,6 +25,7 @@ export default function AuthHandler() {
         password: '', 
     });
     const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     let authContent;
 
@@ -45,9 +46,16 @@ export default function AuthHandler() {
                     >
                     <DialogContentText
                     >
-                        Please register or login to continue
+                        Your research hub
                     </DialogContentText>
                     <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <DialogContentText
+                    >
+                        Please register or login to continue
+                    </DialogContentText>
                     <br/>
                     <Button
                         onClick={() => {
@@ -79,74 +87,88 @@ export default function AuthHandler() {
                             minWidth: '500px',
                         }}
                     >
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="username"
-                        label="Username"
-                        type="text"
-                        variant="outlined"
-                        fullWidth
-                        onChange={(event) => {
-                            setRegisterNewUserData({
-                                ...registerNewUserData,
-                                userName: event.target.value,
-                            });
+                        {(error) ? (
+                            <>
+                                <Alert severity="error">{errorMessage}</Alert>
+                                <br/>
+                            </>
+                        ) : (<></>)}
+                    <form>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="username"
+                            label="Username"
+                            type="text"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(event) => {
+                                setRegisterNewUserData({
+                                    ...registerNewUserData,
+                                    userName: event.target.value,
+                                });
+                                }}
+                            value={registerNewUserData.userName}
+                        />
+                        <br/>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="password"
+                            label="Password"
+                            type="password"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(event) => {
+                                setRegisterNewUserData({
+                                    ...registerNewUserData,
+                                    password: event.target.value,
+                                });
+                                }}
+                            value={registerNewUserData.password}
+                        />
+                        <br/>
+                        <br/>
+                        <Button
+                            onClick={() => {
+                                setAuthType('none');
+                                setError(false);
                             }}
-                        value={registerNewUserData.userName}
-                    />
-                    <br/>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="password"
-                        label="Password"
-                        type="password"
-                        variant="outlined"
-                        error={error}
-                        fullWidth
-                        onChange={(event) => {
-                            setRegisterNewUserData({
-                                ...registerNewUserData,
-                                password: event.target.value,
-                            });
-                            }}
-                        value={registerNewUserData.password}
-                    />
-                    <br/>
-                    <br/>
-                    <Button
-                        onClick={() => {
-                            setAuthType('none')
-                        }}
-                    >
-                        Back
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            //Register the new user
-                            registerNewUser(registerNewUserData, dispatch)
-                                .then(() => {
-                                    setRegisterNewUserData({
-                                        firstName: '',
-                                        lastName: '',
-                                        userName: '',
-                                        password: '', 
+                        >
+                            Back
+                        </Button>
+                        <Button
+                            onClick={(event) => {
+                                //Register the new user
+                                event.preventDefault();
+                                registerNewUser(registerNewUserData, dispatch)
+                                    .then(() => {
+                                        setRegisterNewUserData({
+                                            firstName: '',
+                                            lastName: '',
+                                            userName: '',
+                                            password: '', 
+                                        });
+                                        setAuthType('none');
+                                        setError(false);
+                                    })
+                                    .catch((err) => {
+                                        setErrorMessage(err.toString().replace('Error: ', ''));
+                                        setError(true);
                                     });
-                                    setAuthType('none');
-                                    setError(false);
-                                })
-                                
-                        }}
-                        variant="contained"
-                        sx={{ 
-                            textAlign: 'center',
-                            margin: 'auto',
-                            float: 'right',
-                        }}
-                    >
-                        Register
-                    </Button>
+                                    
+                            }}
+                            variant="contained"
+                            sx={{ 
+                                textAlign: 'center',
+                                margin: 'auto',
+                                float: 'right',
+                            }}
+                            type="submit"
+                        >
+                            Register
+                        </Button>
+                    </form>
                 </DialogContent>
             </>
         );
@@ -163,74 +185,85 @@ export default function AuthHandler() {
                             minWidth: '500px',
                         }}
                     >
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="username"
-                        label="Username"
-                        type="text"
-                        variant="outlined"
-                        fullWidth
-                        onChange={(event) => {
-                            setLoginNewUserData({
-                                ...loginNewUserData,
-                                userName: event.target.value,
-                            });
-                            }}
-                        value={loginNewUserData.userName}
-                    />
-                    <br/>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="password"
-                        label="Password"
-                        type="password"
-                        variant="outlined"
-                        fullWidth
-                        error={error}
-                        onChange={(event) => {
-                            setLoginNewUserData({
-                                ...loginNewUserData,
-                                password: event.target.value,
-                            });
-                            }}
-                        value={loginNewUserData.password}
-                    />
-                    <br/>
-                    <br/>
-                    <Button
-                        onClick={() => {
-                            setAuthType('none')
-                        }}
-                    >
-                        Back
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            //Register the new user
-                            checkUserRegistration(loginNewUserData, dispatch)
-                                .then(() => {
-                                    setLoginNewUserData({
-                                        userName: '',
-                                        password: '', 
-                                    });
-                                    setAuthType('none');
-                                    setError(false);
-                                })
-                                .catch(() => {
-                                    setError(true);
+                        {(error) ? (
+                            <>
+                                <Alert severity="error">{errorMessage}</Alert>
+                                <br/>
+                            </>
+                        ) : (<></>)}
+                    <form>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="username"
+                            label="Username"
+                            type="text"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(event) => {
+                                setLoginNewUserData({
+                                    ...loginNewUserData,
+                                    userName: event.target.value,
                                 });
-                        }}
-                        variant="contained"
-                        sx={{ 
-                            textAlign: 'center',
-                            margin: 'auto',
-                            float: 'right',
-                        }}
-                    >
-                        Register
-                    </Button>
+                                }}
+                            value={loginNewUserData.userName}
+                        />
+                        <br/>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="password"
+                            label="Password"
+                            type="password"
+                            variant="outlined"
+                            fullWidth
+                            onChange={(event) => {
+                                setLoginNewUserData({
+                                    ...loginNewUserData,
+                                    password: event.target.value,
+                                });
+                                }}
+                            value={loginNewUserData.password}
+                        />
+                        <br/>
+                        <br/>
+                        <Button
+                            onClick={() => {
+                                setAuthType('none');
+                                setError(false);
+                            }}
+                        >
+                            Back
+                        </Button>
+                        <Button
+                            onClick={(event) => {
+                                //Login the user
+                                event.preventDefault();
+                                checkUserRegistration(loginNewUserData, dispatch)
+                                    .then(() => {
+                                        setLoginNewUserData({
+                                            userName: '',
+                                            password: '', 
+                                        });
+                                        setAuthType('none');
+                                        setError(false);
+                                    })
+                                    .catch(() => {
+                                        setErrorMessage('Username or password incorrect. Please try again.');
+                                        setError(true);
+                                    });
+                            }}
+                            variant="contained"
+                            sx={{ 
+                                textAlign: 'center',
+                                margin: 'auto',
+                                float: 'right',
+                            }}
+                            type="submit"
+                        >
+                            Login
+                        </Button>
+                    </form>
                 </DialogContent>
             </>
         );
@@ -250,7 +283,7 @@ export default function AuthHandler() {
                     onClose={() => {}}
                 >
                     
-                        {authContent}
+                    {authContent}
                 </Dialog>
             </div>
         )
