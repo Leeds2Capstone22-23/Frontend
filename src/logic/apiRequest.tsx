@@ -34,7 +34,7 @@ export async function fetchData(
     );
     const data = await response.json()
     return {
-        data: data.data,
+        data: (data.data) ? data.data : data.errors,
         status: response.status
     }
   }
@@ -167,6 +167,17 @@ export async function registerNewUser(
         fullName: '',
         userId: -1,
     }
+    let status ={
+        data: [{
+            extensions: {
+                internal: {
+                    response: {
+                        status: 200
+                    }
+                }
+            }
+        }]
+    };
     await fetchData(
       `
       mutation MyMutation {
@@ -176,22 +187,32 @@ export async function registerNewUser(
       }`,
     )
       .then((result) => {
+        status = result
         // Convert to appropriate data type
-        if (result.status !== 401) {
-            console.log(result)
+        console.log('ayyo')
+        if (result.data.register_new_user) {
+            
             newUserAuth = {
                 userSecret: Buffer.from(`${newUser.userName}:${newUser.password}`).toString('base64'),
                 username: newUser.userName,
                 fullName: '',
                 userId: result.data.register_new_user.id,
             }
+            
             dispatch(saveAuth(newUserAuth));
             dispatch(authSuccess());
         } else {
             dispatch(authFailed());
         }
       });
-    return newUserAuth
+    if (newUserAuth.userId !== -1) {
+        return newUserAuth
+    } else {
+        if (status && status.data[0].extensions.internal.response.status === 401) {
+            throw new Error('Username already exists, please choose another.');
+        }
+        throw new Error('Please enter a username and password.');
+    };
   }
 
 
