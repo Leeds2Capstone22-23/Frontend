@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { exampleReducer } from './reducers/exampleReducer';
 import { labelDataReducer, labelStatusReducer } from './reducers/labelReducer';
 import { docDataReducer, docStatusReducer } from './reducers/docReducer';
+import {authDataReducer, authStatusReducer} from './reducers/authReducer'
 
 // This is our main store
 export const defaultStore = configureStore({
@@ -11,6 +12,8 @@ export const defaultStore = configureStore({
     labelStatusReducer,
     docDataReducer,
     docStatusReducer,
+    authDataReducer,
+    authStatusReducer,
   },
 });
 
