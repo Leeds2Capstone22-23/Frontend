@@ -18,17 +18,18 @@ export function LabelStatus() {
 export function LabelData(forceRefresh = false) {
   const labelsData = useSelector((state: RootStore) => state.labelDataReducer);
   const labelsStatus = useSelector((state: RootStore) => state.labelStatusReducer);
+  const authStatus = useSelector((state: RootStore) => state.authStatusReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
     // If we haven't loaded data or data loading has failed
-    if (labelsStatus === Status.Initial || labelsStatus === Status.Failed || forceRefresh) {
+    if (labelsStatus === Status.Initial || labelsStatus === Status.Failed || authStatus === Status.Succeeded || forceRefresh) {
       // Fetch apps
       retrieveAllLabels(dispatch)
         .then((response) => {
             dispatch(saveLabels(response));
         });
     }
-  }, [dispatch, forceRefresh]);
+  }, [dispatch, forceRefresh, authStatus]);
   return labelsData;
 }
