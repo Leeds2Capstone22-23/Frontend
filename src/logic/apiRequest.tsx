@@ -1,7 +1,10 @@
 
 import { labelFailed, labelLoading, labelSuccess } from '../redux/reducers/labelReducer';
 import { docFailed, docLoading, docSuccess } from '../redux/reducers/docReducer';
-import {Label, Doc, Status} from '../types/types'
+import {Label, Doc, Status, newUserRegistration, newUserLogin} from '../types/types'
+import { defaultStore } from '../redux';
+import { Buffer } from "buffer";
+import { authFailed, authLoading, authSuccess, saveAuth } from '../redux/reducers/authReducer';
 
 /**
  * This is the main function that actually queries the API
