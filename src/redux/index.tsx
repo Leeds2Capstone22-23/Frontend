@@ -3,7 +3,6 @@ import { exampleReducer } from './reducers/exampleReducer';
 import { labelDataReducer, labelStatusReducer } from './reducers/labelReducer';
 import { docDataReducer, docStatusReducer } from './reducers/docReducer';
 import {authDataReducer, authStatusReducer} from './reducers/authReducer'
-import { docDataReducer, docStatusReducer } from './reducers/docReducer';
 
 // This is our main store
 export const defaultStore = configureStore({
@@ -15,8 +14,6 @@ export const defaultStore = configureStore({
     docStatusReducer,
     authDataReducer,
     authStatusReducer,
-    docDataReducer,
-    docStatusReducer,
   },
 });
 
