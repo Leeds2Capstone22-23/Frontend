@@ -189,7 +189,6 @@ export async function registerNewUser(
       .then((result) => {
         status = result
         // Convert to appropriate data type
-        console.log('ayyo')
         if (result.data.register_new_user) {
             
             newUserAuth = {
