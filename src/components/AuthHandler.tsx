@@ -58,6 +58,7 @@ export default function AuthHandler() {
                     </DialogContentText>
                     <br/>
                     <Button
+                        data-testid="register"
                         onClick={() => {
                             setAuthType('register')
                         }}
@@ -65,6 +66,7 @@ export default function AuthHandler() {
                         Register
                     </Button>
                     <Button
+                        data-testid="login"
                         onClick={() => {
                             setAuthType('login')
                         }}
@@ -138,6 +140,7 @@ export default function AuthHandler() {
                             Back
                         </Button>
                         <Button
+                            data-testid="registerSubmit"
                             onClick={(event) => {
                                 //Register the new user
                                 event.preventDefault();
@@ -236,6 +239,7 @@ export default function AuthHandler() {
                             Back
                         </Button>
                         <Button
+                            data-testid="loginSubmit"
                             onClick={(event) => {
                                 //Login the user
                                 event.preventDefault();
