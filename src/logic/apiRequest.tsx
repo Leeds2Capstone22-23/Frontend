@@ -149,7 +149,6 @@ export async function checkUserRegistration(loginInfo: newUserLogin, dispatch: F
   }
 
 
-
 /*
 ,--.   ,--.,--. ,--.,--------. ,---. ,--------.,--. ,-----. ,--.  ,--. ,---.
 |   `.'   ||  | |  |'--.  .--'/  O  \'--.  .--'|  |'  .-.  '|  ,'.|  |'   .-'
