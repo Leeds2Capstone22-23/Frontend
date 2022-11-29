@@ -14,4 +14,6 @@ test('renders message', () => {
   );
   const linkElement = screen.getAllByText(/Label 1/i);
   expect(linkElement[0]).toBeInTheDocument();
+  const docElement = screen.getAllByText(/Document 1/i);
+  expect(docElement[0]).toBeInTheDocument();
 });

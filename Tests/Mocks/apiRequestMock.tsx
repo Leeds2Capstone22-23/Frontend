@@ -1,4 +1,4 @@
-import { Label } from "../../src/types/types";
+import { Doc, Label } from "../../src/types/types";
 import { defaultStore } from "../../src/redux";
 
 
@@ -19,6 +19,14 @@ let testLabelReturn:Label[] = [
     },
 ]
 
+let testDocReturn:Doc[] = [
+    {
+        id: 1,
+        title: "Document 1",
+        content: "Example Content"
+    },
+]
+
 jest.mock('../../src/logic/apiRequest', () => ({
     fetchData: jest.fn(() => {
         Promise.resolve();
@@ -33,7 +41,20 @@ jest.mock('../../src/logic/apiRequest', () => ({
         });
         return Promise.resolve(testLabelReturn);
     }),
+    retrieveAllDocs: jest.fn(() => {
+        defaultStore.dispatch({
+            type: 'docs/status/success',
+        });
+        defaultStore.dispatch({
+            type: 'docs/data/save',
+            payload: testDocReturn
+        });
+        return Promise.resolve(testDocReturn);
+    }),
     createNewLabel: jest.fn(() => {
+        Promise.resolve();
+    }),
+    createNewDoc: jest.fn(() => {
         Promise.resolve();
     })
 }));
