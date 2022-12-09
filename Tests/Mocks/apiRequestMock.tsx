@@ -1,4 +1,4 @@
-import { Doc, Label } from "../../src/types/types";
+import { Doc, Label, UserAuth } from "../../src/types/types";
 import { defaultStore } from "../../src/redux";
 
 
@@ -27,9 +27,26 @@ let testDocReturn:Doc[] = [
     },
 ]
 
+let testUserReturn:UserAuth = {
+    userSecret: '',
+    username: 'Test',
+    fullName: 'Testing',
+    userId: 1,
+}
+
 jest.mock('../../src/logic/apiRequest', () => ({
     fetchData: jest.fn(() => {
         Promise.resolve();
+    }),
+    checkUserRegistration: jest.fn(() => {
+        defaultStore.dispatch({
+            type: 'auth/status/success',
+        });
+        defaultStore.dispatch({
+            type: 'auth/data/save',
+            payload: testUserReturn
+        });
+        return Promise.resolve(testUserReturn);
     }),
     retrieveAllLabels: jest.fn(() => {
         defaultStore.dispatch({
@@ -51,11 +68,22 @@ jest.mock('../../src/logic/apiRequest', () => ({
         });
         return Promise.resolve(testDocReturn);
     }),
+    
     createNewLabel: jest.fn(() => {
         Promise.resolve();
     }),
     createNewDoc: jest.fn(() => {
         Promise.resolve();
-    })
+    }),
+    registerNewUser: jest.fn(() => {
+        defaultStore.dispatch({
+            type: 'auth/status/success',
+        });
+        defaultStore.dispatch({
+            type: 'auth/data/save',
+            payload: testUserReturn
+        });
+        return Promise.resolve(testUserReturn);
+    }),
 }));
 
