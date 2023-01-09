@@ -6,7 +6,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect, useState } from 'react';
 import { VirtualElement } from '../types/types';
 import detectHighlight from '../logic/detectHighlight';
-import '../styling/main.css';
 
 export default function DocumentPage() {
   // -----

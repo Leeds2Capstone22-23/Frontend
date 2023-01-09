@@ -7,6 +7,7 @@ import DocumentPage from './components/DocumentPage';
 import Page404 from './components/Page404';
 import LabelRouter from './components/labels/labelRouter';
 import Home from './components/Home';
+import Account from './components/Account';
 
 export default function App() {
   return (
@@ -21,7 +22,7 @@ export default function App() {
                 <Route path="/snippets" element={<h1>Snippets</h1>} />
                 <Route path="/labels/*" element={<LabelRouter />} />
                 <Route path="/settings" element={<h1>Settings</h1>} />
-                <Route path="/account" element={<h1>Account</h1>} />
+                <Route path="/account" element={<Account />} />
                 <Route path="*" element={<Page404 />} />
                 </Routes>
             </NavBar>

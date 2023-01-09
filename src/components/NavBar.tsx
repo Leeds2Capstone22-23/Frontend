@@ -146,8 +146,7 @@ export default function NavBar(props:any) {
           </ListItem>
         </Tooltip>
         </List>
-
-        <Divider />
+        <div style={{ height: 'auto', margin: 'auto' }}/>
         <List>
         <Tooltip key='Settings' title="Settings" placement='right' arrow>
             <ListItem key='Settings' disablePadding sx={{ display: 'block' }}>

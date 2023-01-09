@@ -1,12 +1,16 @@
 import {
-  Alert, Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField,
+  Alert, Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField, Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { checkUserRegistration, registerNewUser } from '../logic/apiRequest';
 import { AuthStatus } from '../redux/hooks/authHook';
 import { newUserLogin, newUserRegistration, Status } from '../types/types';
+import '../styling/main.css';
+import NavBar from './NavBar';
+import Home from './Home';
 
 export default function AuthHandler() {
   // ** REDUX **
@@ -34,27 +38,23 @@ export default function AuthHandler() {
   if (authType === 'none') {
     authContent = (
       <>
-        <DialogTitle
-          sx={{ textAlign: 'center' }}
-        >
-          Welcome to Tag 'n Bag!
-        </DialogTitle>
+        <div style={{ height: '20px' }} />
+        <Typography variant="h2" textAlign="center">
+            Welcome To Tag &apos;n Bag!
+          </Typography>
         <DialogContent
           sx={{
-            minWidth: '500px',
+            minWidth: '750px',
             textAlign: 'center',
           }}
         >
-          <DialogContentText>
-            Your research hub
-          </DialogContentText>
           <br />
           <br />
           <br />
           <br />
-          <DialogContentText>
-            Please register or login to continue
-          </DialogContentText>
+          <Typography variant="h4" textAlign="center">
+            Please Register or Login to continue
+          </Typography>
           <br />
           <Button
             data-testid="register"
@@ -280,11 +280,19 @@ export default function AuthHandler() {
     <div>
       <Dialog
         open
+        maxWidth='lg'
         onClose={() => {}}
       >
 
         {authContent}
       </Dialog>
+      <div className='blur'>
+        <BrowserRouter>
+          <NavBar>
+            <Home />
+          </NavBar>
+        </BrowserRouter>
+      </div>
     </div>
   );
 }
