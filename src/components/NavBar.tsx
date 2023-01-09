@@ -17,7 +17,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import SearchIcon from '@mui/icons-material/Search';
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import LabelIcon from '@mui/icons-material/Label';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MoreIcon from '@mui/icons-material/More';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -97,9 +97,9 @@ export default function NavBar(props:any) {
                       px: 2.5,
                     }}
                     onClick={(event) => {
-                      redirect(event, `/label/${curr.id}`, navigate);
+                      redirect(event, `/labels/${curr.id}`, navigate);
                     }}
-                    href={`/label/${curr.id}`}
+                    href={`/labels/${curr.id}`}
                 >
                     <ListItemIcon
                     sx={{
@@ -119,32 +119,36 @@ export default function NavBar(props:any) {
                 </ListItem>
             </Tooltip>
           ))}
-        </List>
-          <Tooltip key='Add Label' title='Add Label' placement='right' arrow>
-            <ListItem key='Add Label' disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  px: 2.5,
-                }}
-                // TODO: Maybe not a redirect to a new page, maybe just make with popup?
-                onClick={(event) => {
-                  redirect(event, '/add-label', navigate);
-                }}
-                href={'/add-label'}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  justifyContent: 'center',
-                }}
-                >
-                <AddCircleOutlineIcon/>
-              </ListItemIcon>
-          </ListItemButton>
+
+          <Tooltip key='Edit Labels' title='Edit Labels' placement='right' arrow>
+
+              <ListItem key='Edit Labels' disablePadding sx={{ display: 'block' }}>
+              <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    px: 2.5,
+                  }}
+                  // TODO: Maybe not a redirect to a new page, maybe just make with popup?
+                  onClick={(event) => {
+                    redirect(event, '/labels', navigate);
+                  }}
+                  href={'/labels'}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    justifyContent: 'center',
+                  }}
+                  >
+                    <MoreIcon style={{ transform: 'scaleX(-0.75) scaleY(0.75)' }}/>
+                </ListItemIcon>
+            </ListItemButton>
           </ListItem>
         </Tooltip>
+        </List>
+
         <Divider />
+        <List>
         <Tooltip key='Settings' title="Settings" placement='right' arrow>
             <ListItem key='Settings' disablePadding sx={{ display: 'block' }}>
             <ListItemButton
@@ -192,6 +196,7 @@ export default function NavBar(props:any) {
           </ListItemButton>
           </ListItem>
         </Tooltip>
+        </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         {props.children}

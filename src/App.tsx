@@ -6,6 +6,7 @@ import TagPage from './components/TagPage';
 import DocumentPage from './components/DocumentPage';
 import Page404 from './components/Page404';
 import LabelRouter from './components/labels/labelRouter';
+import Home from './components/Home';
 
 export default function App() {
   return (
@@ -14,11 +15,11 @@ export default function App() {
             <NavBar>
                 {/* MAIN ROUTER */}
                 <Routes>
-                <Route path="/" element={<h1>Home</h1>} />
+                <Route path="/" element={<Home />} />
                 <Route path="/search" element={<h1>Search</h1>} />
                 <Route path="/documents" element={<h1>Documents</h1>} />
                 <Route path="/snippets" element={<h1>Snippets</h1>} />
-                <Route path="/label/*" element={<LabelRouter />} />
+                <Route path="/labels/*" element={<LabelRouter />} />
                 <Route path="/settings" element={<h1>Settings</h1>} />
                 <Route path="/account" element={<h1>Account</h1>} />
                 <Route path="*" element={<Page404 />} />
