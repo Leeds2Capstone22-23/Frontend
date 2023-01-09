@@ -20,12 +20,12 @@ export function AuthData(forceRefresh = false) {
   useEffect(() => {
     // If we haven't loaded data or data loading has failed
     if (userAuthStatus === Status.Initial || userAuthStatus === Status.Failed || forceRefresh) {
-        //If userID != -1, check to make sure it's a valid account, and fetch updated data
+      // If userID != -1, check to make sure it's a valid account, and fetch updated data
 
-        // otherwise try and load from local storage
-        
+      // otherwise try and load from local storage
+
     } else if (userAuthStatus === Status.Succeeded) {
-        // save to storage
+      // save to storage
     }
   }, [dispatch, forceRefresh]);
   return userAuthData;

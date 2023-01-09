@@ -1,7 +1,7 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 import {
-    UserAuth,
-    Status
+  UserAuth,
+  Status,
 } from '../../types/types';
 
 /**
@@ -27,18 +27,16 @@ export const saveAuth = createAction<UserAuth>('auth/data/save');
 export const clearAuth = createAction('auth/data/clear');
 
 const blankUser = {
-    userSecret: '',
-    username: '',
-    fullName: '',
-    userId: -1,
+  userSecret: '',
+  username: '',
+  fullName: '',
+  userId: -1,
 } as UserAuth;
 
-export const authDataReducer = createReducer(
-    blankUser, (builder) => {
+export const authDataReducer = createReducer(blankUser, (builder) => {
   builder
     .addCase(saveAuth, (_, action) => action.payload)
-    .addCase(clearAuth, () => {
-        //Clear local storage?
-        return blankUser
-    });
+    .addCase(clearAuth, () =>
+    // Clear local storage?
+      blankUser);
 });

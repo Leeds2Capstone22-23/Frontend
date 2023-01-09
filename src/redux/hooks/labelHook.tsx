@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { retrieveAllLabels } from '../../logic/apiRequest';
-import { RootStore } from '../../redux';
+import { RootStore } from '..';
 import { Status } from '../../types/types';
 import { saveLabels } from '../reducers/labelReducer';
 
@@ -27,7 +27,7 @@ export function LabelData(forceRefresh = false) {
       // Fetch apps
       retrieveAllLabels(dispatch)
         .then((response) => {
-            dispatch(saveLabels(response));
+          dispatch(saveLabels(response));
         });
     }
   }, [dispatch, forceRefresh, authStatus]);

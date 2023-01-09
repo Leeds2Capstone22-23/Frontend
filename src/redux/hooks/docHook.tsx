@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { retrieveAllDocs } from '../../logic/apiRequest';
-import { RootStore } from '../../redux';
+import { RootStore } from '..';
 import { Status } from '../../types/types';
 import { saveDocs } from '../reducers/docReducer';
 
@@ -26,7 +26,7 @@ export function DocData(forceRefresh = false) {
       // Fetch apps
       retrieveAllDocs(dispatch)
         .then((response) => {
-            dispatch(saveDocs(response));
+          dispatch(saveDocs(response));
         });
     }
   }, [dispatch, forceRefresh]);

@@ -1,18 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from '@mui/material';
 import AuthHandler from './components/AuthHandler';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
 import { defaultStore } from './redux';
+import { theme } from './styling/MainTheme';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
   <React.StrictMode>
-    <Provider store={defaultStore}>
-        <AuthHandler />
-    </Provider>
+    <ThemeProvider theme={theme}>
+        <Provider store={defaultStore}>
+            <AuthHandler />
+        </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
 );
 
