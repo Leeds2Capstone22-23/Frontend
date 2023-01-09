@@ -19,11 +19,14 @@ import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
 import LabelIcon from '@mui/icons-material/Label';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Locals
+import { useNavigate } from 'react-router-dom';
 import { LabelData } from '../redux/hooks/labelHook';
 import { colors } from '../styling/Colors';
 import { AuthData } from '../redux/hooks/authHook';
+import redirect from '../logic/routerRedirect';
 
 // This handles the actual drawer component including setting the width and look
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -39,16 +42,17 @@ const Drawer = styled(MuiDrawer)(
   }),
 );
 const mainIcons = [
-  { name: 'Home', icon: (<HomeIcon />) },
-  { name: 'Search', icon: (<SearchIcon />) },
-  { name: 'Documents', icon: (<FolderIcon />) },
-  { name: 'Snippets', icon: (<SpeakerNotesIcon />) },
+  { name: 'Home', icon: (<HomeIcon />), location: '/' },
+  { name: 'Search', icon: (<SearchIcon />), location: '/search' },
+  { name: 'Documents', icon: (<FolderIcon />), location: '/documents' },
+  { name: 'Snippets', icon: (<SpeakerNotesIcon />), location: '/snippets' },
 ];
 
 export default function NavBar(props:any) {
   // ** REDUX **
   const labelData = LabelData();
   const authData = AuthData();
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -64,6 +68,10 @@ export default function NavBar(props:any) {
                       minHeight: 48,
                       px: 2.5,
                     }}
+                    onClick={(event) => {
+                      redirect(event, curr.location, navigate);
+                    }}
+                    href={curr.location}
                 >
                     <ListItemIcon
                     sx={{
@@ -88,6 +96,10 @@ export default function NavBar(props:any) {
                       minHeight: 48,
                       px: 2.5,
                     }}
+                    onClick={(event) => {
+                      redirect(event, `/label/${curr.id}`, navigate);
+                    }}
+                    href={`/label/${curr.id}`}
                 >
                     <ListItemIcon
                     sx={{
@@ -115,6 +127,11 @@ export default function NavBar(props:any) {
                   minHeight: 48,
                   px: 2.5,
                 }}
+                // TODO: Maybe not a redirect to a new page, maybe just make with popup?
+                onClick={(event) => {
+                  redirect(event, '/add-label', navigate);
+                }}
+                href={'/add-label'}
             >
               <ListItemIcon
                 sx={{
@@ -128,6 +145,30 @@ export default function NavBar(props:any) {
           </ListItem>
         </Tooltip>
         <Divider />
+        <Tooltip key='Settings' title="Settings" placement='right' arrow>
+            <ListItem key='Settings' disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  px: 2.5,
+                }}
+                onClick={(event) => {
+                  redirect(event, '/settings', navigate);
+                }}
+                href={'/settings'}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  justifyContent: 'center',
+                }}
+                >
+                <SettingsIcon/>
+              </ListItemIcon>
+          </ListItemButton>
+          </ListItem>
+        </Tooltip>
+
         <Tooltip key='Account' title={authData.username} placement='right' arrow>
             <ListItem key='Account' disablePadding sx={{ display: 'block' }}>
             <ListItemButton
@@ -135,6 +176,10 @@ export default function NavBar(props:any) {
                   minHeight: 48,
                   px: 2.5,
                 }}
+                onClick={(event) => {
+                  redirect(event, '/account', navigate);
+                }}
+                href={'/account'}
             >
               <ListItemIcon
                 sx={{
