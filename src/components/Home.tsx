@@ -1,11 +1,5 @@
-import styled from '@emotion/styled';
-import {
-  Button,
-  Divider, Paper, Typography,
-} from '@mui/material';
-import
-Grid from '@mui/material/Grid';
-import { height } from '@mui/system';
+import { Button, Divider, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import redirect from '../logic/routerRedirect';
@@ -58,10 +52,10 @@ export default function Home() {
             <Grid item xs>
                 <div style={{ textAlign: 'center' }}>
                     <Button
-                        href="/labels/"
+                        href="/labels"
                         style={{ width: '25vw', height: '15vh' }}
                         onClick={(event) => {
-                          redirect(event, '/labels/', navigate);
+                          redirect(event, '/labels', navigate);
                         }}
                     >
                         <HomeCard name="Labels" number="11" />
@@ -72,7 +66,7 @@ export default function Home() {
             <Grid item xs>
                 <div style={{ textAlign: 'center' }}>
                     <Button
-                        href="/snippets/"
+                        href="/snippets"
                         style={{ width: '25vw', height: '15vh' }}
                         onClick={(event) => {
                           redirect(event, '/snippets', navigate);

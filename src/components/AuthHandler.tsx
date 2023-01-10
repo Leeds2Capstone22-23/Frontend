@@ -1,11 +1,11 @@
 import {
-  Alert, Button, Dialog, DialogContent, DialogContentText, DialogTitle, TextField, Typography,
+  Alert, Button, CircularProgress, Dialog, DialogContent, DialogTitle, TextField, Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
-import { checkUserRegistration, registerNewUser } from '../logic/apiRequest';
+import { loginUser, registerNewUser } from '../logic/apiRequest';
 import { AuthStatus } from '../redux/hooks/authHook';
 import { newUserLogin, newUserRegistration, Status } from '../types/types';
 import '../styling/main.css';
@@ -36,45 +36,67 @@ export default function AuthHandler() {
 
   // Show Registration or Login Page depending on selection
   if (authType === 'none') {
-    authContent = (
-      <>
-        <div style={{ height: '20px' }} />
-        <Typography variant="h2" textAlign="center">
-            Welcome To Tag &apos;n Bag!
-          </Typography>
-        <DialogContent
-          sx={{
-            minWidth: '750px',
-            textAlign: 'center',
-          }}
-        >
-          <br />
-          <br />
-          <br />
-          <br />
+    if (authStatus !== Status.Loading) {
+      authContent = (
+        <>
+          <div style={{ height: '20px' }} />
+          <Typography variant="h2" textAlign="center">
+              Welcome To Tag &apos;n Bag!
+            </Typography>
+          <DialogContent
+            sx={{
+              minWidth: '750px',
+              textAlign: 'center',
+            }}
+          >
+            <br />
+            <br />
+            <br />
+            <br />
+            <Typography variant="h4" textAlign="center">
+              Please Register or Login to continue
+            </Typography>
+            <br />
+            <Button
+              data-testid="register"
+              onClick={() => {
+                setAuthType('register');
+              }}
+            >
+              Register
+            </Button>
+            <Button
+              data-testid="login"
+              onClick={() => {
+                setAuthType('login');
+              }}
+            >
+              Login
+            </Button>
+          </DialogContent>
+        </>
+      );
+    } else {
+      authContent = (
+        <>
+          <div style={{ height: '40px' }} />
           <Typography variant="h4" textAlign="center">
-            Please Register or Login to continue
-          </Typography>
-          <br />
-          <Button
-            data-testid="register"
-            onClick={() => {
-              setAuthType('register');
+              Checking User Authorization
+            </Typography>
+          <DialogContent
+            sx={{
+              minWidth: '750px',
+              textAlign: 'center',
             }}
           >
-            Register
-          </Button>
-          <Button
-            data-testid="login"
-            onClick={() => {
-              setAuthType('login');
-            }}
-          >
-            Login
-          </Button>
-        </DialogContent>
-      </>
-    );
+            <div style={{ height: '40px' }} />
+            <CircularProgress/>
+            <div style={{ height: '40px' }} />
+
+          </DialogContent>
+        </>
+      );
+    }
   } else if (authType === 'register') {
     authContent = (
       <>
@@ -241,7 +263,7 @@ export default function AuthHandler() {
               onClick={(event) => {
                 // Login the user
                 event.preventDefault();
-                checkUserRegistration(loginNewUserData, dispatch)
+                loginUser(loginNewUserData, dispatch)
                   .then(() => {
                     setLoginNewUserData({
                       userName: '',

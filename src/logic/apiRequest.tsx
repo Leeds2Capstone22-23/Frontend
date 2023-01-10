@@ -6,7 +6,7 @@ import {
 } from '../types/types';
 import { defaultStore } from '../redux';
 import {
-  authFailed, authLoading, authSuccess, saveAuth,
+  authFailed, authInitial, authLoading, authSuccess, clearAuth, saveAuth,
 } from '../redux/reducers/authReducer';
 
 /**
@@ -30,7 +30,10 @@ export async function fetchData(
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
-        Authorization: (auth) ? (`Basic ${auth}`) : ((user.userSecret) ? (`Basic ${user.userSecret}`) : ('')),
+        Authorization:
+        (auth)
+          ? (`Basic ${auth}`)
+          : ((user.userSecret) ? (`Basic ${user.userSecret}`) : ('')),
       },
       body: JSON.stringify({ query }),
     },
@@ -49,7 +52,7 @@ export async function fetchData(
 '  '-'  '-.'  '-'  '|  `---.|  |\  \ |  ||  `---..-'    |
  `-----'--' `-----' `------'`--' '--'`--'`------'`-----'
 */
-export async function checkUserRegistration(loginInfo: newUserLogin, dispatch: Function) {
+export async function loginUser(loginInfo: newUserLogin, dispatch: Function) {
   dispatch(authLoading());
   let newUserAuth = {
     userSecret: '',
@@ -90,6 +93,55 @@ export async function checkUserRegistration(loginInfo: newUserLogin, dispatch: F
     return newUserAuth;
   }
   throw new Error();
+}
+
+export async function checkUserLogin(username: string, secret: string, dispatch: Function) {
+  dispatch(authLoading());
+  let newUserAuth = {
+    userSecret: '',
+    username: '',
+    fullName: '',
+    userId: -1,
+  };
+  await fetchData(
+    `
+      query {
+        users {
+            id
+          }
+      }`,
+    () => {},
+    secret,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      if (result.data.users[0].id) {
+        // we have data
+        newUserAuth = {
+          userSecret: secret,
+          username,
+          fullName: '',
+          userId: result.data.users[0].id,
+        };
+        dispatch(saveAuth(newUserAuth));
+        dispatch(authSuccess());
+      } else {
+        // Case if the actual api returns an error
+        dispatch(clearAuth());
+        dispatch(authInitial());
+      }
+    })
+  // case if the fetch request from frontend to backend fails
+    .catch(() => { dispatch(authFailed()); });
+  if (newUserAuth.userId !== -1) {
+    return newUserAuth;
+  }
+  return {
+    userSecret: '',
+    username: '',
+    fullName: '',
+    userId: -1,
+  };
 }
 
 export async function retrieveAllLabels(dispatch: Function) {
