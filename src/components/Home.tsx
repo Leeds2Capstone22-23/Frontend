@@ -1,28 +1,48 @@
-import { Button, Divider, Typography } from '@mui/material';
+import {
+  Button, CircularProgress, Divider, Typography,
+} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import redirect from '../logic/routerRedirect';
+import { DocData, DocStatus } from '../redux/hooks/docHook';
+import { LabelData, LabelStatus } from '../redux/hooks/labelHook';
+import { SnippetData, SnippetStatus } from '../redux/hooks/snippetHook';
+import { Status } from '../types/types';
 
 interface HomeCardProps {
   name: string,
-  number: string
+  number: string,
+  status: Status
 }
 function HomeCard(props:HomeCardProps) {
+  if (props.status === Status.Loading) {
+    return (
+            <div>
+                <CircularProgress />
+            </div>
+    );
+  }
   return (
-        <div>
-        <Typography variant="h2" textAlign="center">
-            {props.number}
-        </Typography>
-        <Typography variant="h4" textAlign="center">
-            {props.name}
-        </Typography>
-        </div>
+                <div>
+                <Typography variant="h2" textAlign="center">
+                    {props.number}
+                </Typography>
+                <Typography variant="h4" textAlign="center">
+                    {props.name}
+                </Typography>
+                </div>
   );
 }
 
 export default function Home() {
   const navigate = useNavigate();
+  const labelData = LabelData();
+  const labelStatus = LabelStatus();
+  const docData = DocData();
+  const docStatus = DocStatus();
+  const snippetData = SnippetData();
+  const snippetStatus = SnippetStatus();
   return (
     <>
         <div style={{ height: '10vh' }} />
@@ -44,7 +64,11 @@ export default function Home() {
                           redirect(event, '/documents', navigate);
                         }}
                     >
-                        <HomeCard name="Documents" number="69" />
+                        <HomeCard
+                            name={docData.length === 1 ? 'Document' : 'Documents'}
+                            number={docData.length.toString()}
+                            status={docStatus}
+                        />
                     </Button>
                 </div>
             </Grid>
@@ -58,7 +82,11 @@ export default function Home() {
                           redirect(event, '/labels', navigate);
                         }}
                     >
-                        <HomeCard name="Labels" number="11" />
+                        <HomeCard
+                            name={labelData.length === 1 ? 'Label' : 'Labels'}
+                            number={labelData.length.toString()}
+                            status={labelStatus}
+                        />
                     </Button>
                 </div>
             </Grid>
@@ -72,7 +100,11 @@ export default function Home() {
                           redirect(event, '/snippets', navigate);
                         }}
                     >
-                        <HomeCard name="Snippets" number="420" />
+                        <HomeCard
+                            name={snippetData.length === 1 ? 'Snippet' : 'Snippets'}
+                            number={snippetData.length.toString()}
+                            status={snippetStatus}
+                        />
                     </Button>
                 </div>
             </Grid>

@@ -1,8 +1,19 @@
 import { Buffer } from 'buffer';
-import { labelFailed, labelLoading, labelSuccess } from '../redux/reducers/labelReducer';
-import { docFailed, docLoading, docSuccess } from '../redux/reducers/docReducer';
+import { debounce } from 'lodash';
 import {
-  Label, Doc, Status, newUserRegistration, newUserLogin,
+  labelFailed, labelLoading, labelSuccess, saveLabels,
+} from '../redux/reducers/labelReducer';
+import {
+  docFailed, docLoading, docSuccess, saveDocs,
+} from '../redux/reducers/docReducer';
+import {
+  saveSnippets,
+  snippetFailed,
+  snippetLoading,
+  snippetSuccess,
+} from '../redux/reducers/snippetReducer';
+import {
+  Label, Doc, Status, newUserRegistration, newUserLogin, Snippet,
 } from '../types/types';
 import { defaultStore } from '../redux';
 import {
@@ -21,7 +32,7 @@ export async function fetchData(
   auth?:string,
 ) {
   const url = 'http://localhost:8080/v1/graphql';
-  const user = defaultStore.getState().authDataReducer;
+  const user = defaultStore.getState().rootReducer.authDataReducer;
   const response = await fetch(
     `${url}`,
     {
@@ -95,7 +106,18 @@ export async function loginUser(loginInfo: newUserLogin, dispatch: Function) {
   throw new Error();
 }
 
-export async function checkUserLogin(username: string, secret: string, dispatch: Function) {
+/**
+ * Checks if the login loaded from cookies is still valid
+ * @param username username for user to be verified
+ * @param secret saved secret to verify
+ * @param dispatch passing dispatch function from view
+ * @returns user information
+ */
+export async function checkUserLoginDebounced(
+  username: string,
+  secret: string,
+  dispatch: Function,
+) {
   dispatch(authLoading());
   let newUserAuth = {
     userSecret: '',
@@ -143,26 +165,32 @@ export async function checkUserLogin(username: string, secret: string, dispatch:
     userId: -1,
   };
 }
+export const checkUserLogin = debounce(
+  checkUserLoginDebounced,
+  100,
+  { leading: true, trailing: false },
+);
 
-export async function retrieveAllLabels(dispatch: Function) {
+export async function retrieveAllLabelsDebounced(dispatch: Function) {
   let storage:Label[] = [];
   dispatch(labelLoading());
   await fetchData(
     `
-      query {
-        labels {
-          id,
-          name,
-          color,
-        }
-      }`,
+        query {
+          labels {
+            id,
+            name,
+            color,
+          }
+        }`,
   )
     .then((result) => {
       // Convert to appropriate data type
       if (result.data) {
         // we have data
-        dispatch(labelSuccess());
         storage = result.data.labels as Label[];
+        dispatch(saveLabels(storage));
+        dispatch(labelSuccess());
       } else {
         // Case if the actual api returns an error
         dispatch(labelFailed());
@@ -170,10 +198,14 @@ export async function retrieveAllLabels(dispatch: Function) {
     })
   // case if the fetch request from frontend to backend fails
     .catch(() => { dispatch(labelFailed()); });
-  return storage;
 }
+export const retrieveAllLabels = debounce(
+  retrieveAllLabelsDebounced,
+  100,
+  { leading: true, trailing: false },
+);
 
-export async function retrieveAllDocs(dispatch: Function) {
+export async function retrieveAllDocsDebounced(dispatch: Function) {
   let storage:Doc[] = [];
   dispatch(docLoading());
   await fetchData(
@@ -190,8 +222,9 @@ export async function retrieveAllDocs(dispatch: Function) {
       // Convert to appropriate data type
       if (result.data) {
         // we have data
-        dispatch(docSuccess());
         storage = result.data.documents as Doc[];
+        dispatch(saveDocs(storage));
+        dispatch(docSuccess());
       } else {
         // Case if the actual api returns an error
         dispatch(docFailed());
@@ -201,6 +234,48 @@ export async function retrieveAllDocs(dispatch: Function) {
     .catch(() => { dispatch(docFailed()); });
   return storage;
 }
+export const retrieveAllDocs = debounce(
+  retrieveAllDocsDebounced,
+  100,
+  { leading: true, trailing: false },
+);
+
+export async function retrieveAllSnippetsDebounced(dispatch: Function) {
+  let storage:Snippet[] = [];
+  dispatch(snippetLoading());
+  await fetchData(
+    `
+      query {
+        snippets {
+          id
+          document_id
+          label_id
+          length
+          char_offset
+        }
+      }`,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      if (result.data) {
+        // we have data
+        storage = result.data.snippets as Snippet[];
+        dispatch(saveSnippets(storage));
+        dispatch(snippetSuccess());
+      } else {
+        // Case if the actual api returns an error
+        dispatch(snippetFailed());
+      }
+    })
+  // case if the fetch request from frontend to backend fails
+    .catch(() => { dispatch(snippetFailed()); });
+  return storage;
+}
+export const retrieveAllSnippets = debounce(
+  retrieveAllSnippetsDebounced,
+  100,
+  { leading: true, trailing: false },
+);
 
 /*
 ,--.   ,--.,--. ,--.,--------. ,---. ,--------.,--. ,-----. ,--.  ,--. ,---.

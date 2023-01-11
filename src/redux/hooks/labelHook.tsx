@@ -3,32 +3,36 @@ import { useSelector, useDispatch } from 'react-redux';
 import { retrieveAllLabels } from '../../logic/apiRequest';
 import { RootStore } from '..';
 import { Status } from '../../types/types';
-import { saveLabels } from '../reducers/labelReducer';
+import { AuthStatus } from './authHook';
 
 /**
  * STATUS
  */
 export function LabelStatus() {
-  return useSelector((state: RootStore) => state.labelStatusReducer);
+  return useSelector((state: RootStore) => state.rootReducer.labelStatusReducer);
 }
 
 /**
  * DATA
  */
 export function LabelData(forceRefresh = false) {
-  const labelsData = useSelector((state: RootStore) => state.labelDataReducer);
-  const labelsStatus = useSelector((state: RootStore) => state.labelStatusReducer);
-  const authStatus = useSelector((state: RootStore) => state.authStatusReducer);
+  const labelsData = useSelector((state: RootStore) => state.rootReducer.labelDataReducer);
+  const labelsStatus = useSelector((state: RootStore) => state.rootReducer.labelStatusReducer);
+  const authStatus = AuthStatus();
   const dispatch = useDispatch();
 
   useEffect(() => {
     // If we haven't loaded data or data loading has failed
-    if (labelsStatus === Status.Initial || labelsStatus === Status.Failed || authStatus === Status.Succeeded || forceRefresh) {
+    if (
+      (
+        labelsStatus === Status.Initial
+        || labelsStatus === Status.Failed
+        || forceRefresh
+      )
+      && authStatus === Status.Succeeded
+    ) {
       // Fetch apps
-      retrieveAllLabels(dispatch)
-        .then((response) => {
-          dispatch(saveLabels(response));
-        });
+      retrieveAllLabels(dispatch);
     }
   }, [dispatch, forceRefresh, authStatus]);
   return labelsData;

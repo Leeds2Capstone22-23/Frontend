@@ -3,15 +3,17 @@ import {
   Button, Typography,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { AuthData } from '../redux/hooks/authHook';
-import { authInitial, clearAuth } from '../redux/reducers/authReducer';
+import { logoutAction } from '../redux';
+import routerRedirect from '../logic/routerRedirect';
 
 export default function Account() {
   const dispatch = useDispatch();
   const authData = AuthData();
+  const navigate = useNavigate();
   return (
     <>
-        <div style={{ height: '10vh' }} />
         <Typography variant="h2" textAlign="center">
             Account
         </Typography>
@@ -19,20 +21,22 @@ export default function Account() {
         <Typography variant="h4" textAlign="center">
             {authData.username}
         </Typography>
-        <div style={{ height: '3vh' }} />
         <div style={{
           textAlign: 'center',
         }}>
             <Button
                 sx= {{
-                  color: 'white', textAlign: 'center', width: '10vw', height: '5vh',
+                  color: 'white', textAlign: 'center',
                 }}
-                onClick={() => {
-                  dispatch(clearAuth());
-                  dispatch(authInitial());
+                onClick={(event) => {
+                  routerRedirect(event, '/', navigate);
+                  const date = new Date();
+                  date.setDate(0);
+                  document.cookie = `username=, secret=;expires=${date.toUTCString()};path=/;`;
+                  dispatch(logoutAction());
                 }}
             >
-                <Typography variant="body1" textAlign="center">
+                <Typography variant="body2" textAlign="center">
                     Log Out
                 </Typography>
             </Button>

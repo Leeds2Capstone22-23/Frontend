@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export enum Status {Initial, Loading, Succeeded, Failed}
 
 export interface VirtualElement {
@@ -34,4 +35,12 @@ export interface Doc {
   id: number,
   title: string,
   content: string,
+}
+
+export interface Snippet {
+  id: number,
+  document_id: number,
+  label_id: number,
+  length: number,
+  char_offset: number,
 }
