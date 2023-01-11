@@ -215,6 +215,7 @@ export async function retrieveAllDocsDebounced(dispatch: Function) {
           id
           title
           content
+          time_added
         }
       }`,
   )

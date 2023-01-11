@@ -35,6 +35,7 @@ export interface Doc {
   id: number,
   title: string,
   content: string,
+  time_added: string,
 }
 
 export interface Snippet {
