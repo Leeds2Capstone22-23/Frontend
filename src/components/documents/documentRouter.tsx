@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router';
 import Page404 from '../Page404';
 import DocumentBrowser from './documentBrowser';
+import DocumentView from './documentView';
 
 export default function LabelRouter() {
   return (
@@ -9,7 +10,7 @@ export default function LabelRouter() {
       {/* labels router */}
       <Routes>
         <Route path='/' element={<DocumentBrowser />} />
-        <Route path="/:labelID" element={<h1>yo</h1>} />
+        <Route path="/:documentID" element={<DocumentView />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </>
