@@ -16,6 +16,7 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "buffer": "^6.0.3",
+    "fuse.js": "^6.6.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "react": "^18.2.0",

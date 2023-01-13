@@ -1,7 +1,7 @@
 import {
-  Button, Link, TablePagination, Typography,
+  Button, Link, TextField, Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,19 +10,57 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import moment from 'moment';
+import SearchIcon from '@mui/icons-material/Search';
+import Fuse from 'fuse.js';
+import { useNavigate } from 'react-router-dom';
 import { DocData } from '../../redux/hooks/docHook';
 import { Doc } from '../../types/types';
+import routerRedirect from '../../logic/routerRedirect';
 
 function createData(doc: Doc) {
-  const { title } = doc;
+  const { title, id } = doc;
   const date = doc.time_added;
   return {
-    title, date,
+    title, date, id,
   };
 }
 
 export default function DocumentBrowser() {
   const docsData = DocData();
+
+  const [docsFiltered, setDocsFiltered] = useState<Doc[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
+
+  /**
+   * Handles searching for filtering documents
+   * @param newSearchQuery the string of the search
+   */
+  function searchObjects(newSearchQuery:string) {
+    setSearchQuery(newSearchQuery);
+    if (newSearchQuery === '') {
+      setDocsFiltered(docsData);
+    } else {
+      setDocsFiltered(
+        new Fuse(docsData, {
+          threshold: 0.3,
+          keys: [
+            'title',
+            {
+              name: 'content',
+              weight: 0.2,
+            },
+          ],
+        })
+          .search(newSearchQuery)
+          .map((element) => element.item),
+      );
+    }
+  }
+  useEffect(() => {
+    setDocsFiltered(docsData);
+  }, [docsData]);
+
   return (
     <div style={{
       display: 'flex',
@@ -34,6 +72,19 @@ export default function DocumentBrowser() {
           Documents
       </Typography>
       <div style={{ padding: '3vw', minHeight: '0px' }}>
+          <TextField
+            id="outlined-basic"
+            aria-label="Search"
+            onChange={ (event) => searchObjects(event.target.value)}
+            value={searchQuery}
+            label={
+              <>
+                <SearchIcon/>
+              </>
+          }
+            variant="filled"
+            style={{ width: '100%', backgroundColor: '#0f0f17' }}
+          />
         <TableContainer component={Paper} style={{ height: '100%' }}>
           <Table
             aria-label="Documents"
@@ -54,15 +105,19 @@ export default function DocumentBrowser() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {docsData.map((curr) => {
+              {docsFiltered.map((curr) => {
                 const row = createData(curr);
                 return (
                 <TableRow
-                  key={row.title}
+                  key={row.id}
                   sx={{ border: 0 }}
                 >
                   <TableCell component="th" scope="row">
-                    <Link href="#" underline="hover">
+                    <Link
+                      href={`/documents/${row.id}`}
+                      underline="hover"
+                      onClick={(event) => routerRedirect(event, `/documents/${row.id}`, navigate)}
+                    >
                       <Typography variant="body1">
                         {row.title}
                       </Typography>
@@ -80,7 +135,7 @@ export default function DocumentBrowser() {
           </Table>
         </TableContainer>
       </div>
-      <div style={{ margin: '20px', textAlign: 'center', minHeight: '' }}>
+      <div style={{ marginTop: '40px', textAlign: 'center', minHeight: '' }}>
         <Button variant="outlined">Create Document</Button>
       </div>
     </div>
