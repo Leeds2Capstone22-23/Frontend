@@ -19,9 +19,6 @@ export default function DocumentView() {
 
   const snippetsInDoc = snippetData.filter((curr) => curr.document_id === Number(documentID));
 
-  // Questionable logic time
-  // by looping through the string, this should
-
   function addSnippets(toChange: String):String {
     const currDocumentExpanded = toChange.replaceAll('\n', '\n\n');
     function generateAdditions() {
@@ -41,10 +38,9 @@ export default function DocumentView() {
       return (arr);
     }
     const obj = {};
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [start, startAdd] of generateAdditions()) {
+    generateAdditions().forEach(([start, startAdd]) => {
       obj[start] = (obj[start] || '') + startAdd;
-    }
+    });
 
     return currDocumentExpanded.replace(
       /(?:)/g,
@@ -64,8 +60,11 @@ export default function DocumentView() {
                   padding: '3vw',
                   whiteSpace: 'pre-line',
                 }}
+
+                dangerouslySetInnerHTML={{
                 // eslint-disable-next-line @typescript-eslint/naming-convention
-                dangerouslySetInnerHTML={{ __html: String(addSnippets(currDocument.content || '')) }}
+                  __html: String(addSnippets(currDocument.content || '')),
+                }}
             >
             </Paper>
         </>
