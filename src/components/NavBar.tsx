@@ -27,6 +27,7 @@ import { LabelData } from '../redux/hooks/labelHook';
 import { colors } from '../styling/Colors';
 import { AuthData } from '../redux/hooks/authHook';
 import redirect from '../logic/routerRedirect';
+import '../styling/main.css';
 
 // This handles the actual drawer component including setting the width and look
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -87,7 +88,7 @@ export default function NavBar(props:any) {
           ))}
         </List>
         <Divider />
-        <List>
+        <List style={{ overflow: 'scroll' }} className='navbar-labels'>
           {labelData.map((curr) => (
             <Tooltip key={curr.name} title={curr.name} placement='right' arrow>
                 <ListItem key={curr.name} disablePadding sx={{ display: 'block' }}>
