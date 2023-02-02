@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -12,16 +14,21 @@ import {
   Select,
   Typography,
 } from '@mui/material';
+import LabelIcon from '@mui/icons-material/Label';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { DocData, DocStatus } from '../../redux/hooks/docHook';
 import { LabelData } from '../../redux/hooks/labelHook';
 import { SnippetData } from '../../redux/hooks/snippetHook';
-import { Snippet, Status, VirtualElement } from '../../types/types';
+import {
+  NewSnippet, Snippet, Status, VirtualElement,
+} from '../../types/types';
 import { colors } from '../../styling/Colors';
 import Page404 from '../Page404';
 import detectHighlight from '../../logic/detectHighlight';
+import '../../styling/main.css';
+import { createNewSnippet } from '../../logic/apiRequest';
 
 export default function DocumentView() {
   // ** STATE **
@@ -40,9 +47,21 @@ export default function DocumentView() {
     savedSelectionLocation,
     setSavedSelectionLocation,
   ] = useState<VirtualElement | undefined>();
-  const [selectionRange, setSelectionRange] = useState<Range | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState<any>();
-  const [contentCleaned, setContentCleaned] = useState<any>();
+  const [selectedLabel, setSelectedLabel] = useState(10);
+  const [contentCleaned, _setContentCleaned] = useState<any>();
+  const contentCleanedRef = React.useRef(contentCleaned);
+  const setContentCleaned = (data) => {
+    contentCleanedRef.current = data;
+    _setContentCleaned(data);
+  };
+  const [refreshSnippets, setRefreshSnippets] = useState(false);
+  const [newSnippetData, setNewSnippetData] = useState<NewSnippet>({
+    document_id: -1,
+    label_id: -1,
+    length: -1,
+    char_offset: -1,
+  });
+  const [addSnippetStatus, setAddSnippetStatus] = useState(Status.Initial);
 
   // ** ROUTER **
   const { documentID } = useParams();
@@ -50,7 +69,7 @@ export default function DocumentView() {
   // ** REDUX **
   const documentData = DocData();
   const documentStatus = DocStatus();
-  const snippetData = SnippetData();
+  const snippetData = SnippetData(refreshSnippets);
   const labelData = LabelData();
 
   /**
@@ -90,10 +109,11 @@ export default function DocumentView() {
     });
 
     // add the actual additions
-    return currDocumentExpanded.replace(
+    const added = currDocumentExpanded.replace(
       /(?:)/g,
       (_, index) => obj[index] || '',
     );
+    return `<p class="docText">${added}</p>`;
   }
 
   const currDocument = { ...documentData.find((curr) => curr.id === Number(documentID)) };
@@ -113,8 +133,7 @@ export default function DocumentView() {
             event.preventDefault();
             const detectHighightReturn = detectHighlight(event, window);
             if (detectHighightReturn) {
-              setSelectionVirtualElement(detectHighightReturn[0]);
-              setSelectionRange(detectHighightReturn[1]);
+              setSelectionVirtualElement(detectHighightReturn);
             }
             setShowSnippetCreation(true);
           } else {
@@ -132,6 +151,9 @@ export default function DocumentView() {
       { ...documentData.find((curr) => curr.id === Number(documentID)) }.content || '',
       snippetData,
     ));
+    if (labelData.length > 0) {
+      setSelectedLabel(labelData[0].id);
+    }
   }, [snippetData, labelData]);
 
   useEffect(() => {
@@ -139,6 +161,16 @@ export default function DocumentView() {
       setSavedSelectionLocation(selectionVirtualElement);
     }
   }, [showSnippetCreationOptions, selectionVirtualElement]);
+
+  useEffect(() => {
+    if (refreshSnippets) {
+      setContentCleaned(addSnippets(
+        currDocument.content || '',
+        snippetData,
+      ));
+      setRefreshSnippets(false);
+    }
+  }, [refreshSnippets]);
 
   /**
    * This handles the snippet creation options
@@ -153,6 +185,7 @@ export default function DocumentView() {
         sx={{
           margin: 'auto',
           textAlign: 'center',
+          minWidth: '350px',
         }}
       >
 
@@ -176,25 +209,58 @@ export default function DocumentView() {
         <Typography variant="h4" align="center" style={{ padding: '20px' }}>
           Add Snippet
         </Typography>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Select Label</InputLabel>
-          <Select
-            value={selectedLabel}
-            label="Label"
-            onChange={(event) => {
-              setSelectedLabel(event.target.value);
-            }}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
+        <div style={{ padding: '20px' }}>
+          <FormControl fullWidth>
+            <InputLabel>Select Label</InputLabel>
+            <Select
+              value={selectedLabel}
+              label="Select Label"
+              onChange={(event) => {
+                setSelectedLabel(Number(event.target.value));
+              }}
+              style= {{
+                textAlign: 'left',
+              }}
+            >
+              {labelData.map((curr) => (
+                <MenuItem key={curr.id} value={curr.id}>
+                  <div>
+                  <LabelIcon sx={{
+                    color:
+                      (curr.color >= 0 && curr.color < colors.length)
+                        ? colors[curr.color]
+                        : '',
+                    verticalAlign: 'middle',
+                    display: 'inline-block',
+                    marginRight: '10px',
+                  }}
+                    />
+                  <span
+                   style={{
+                     verticalAlign: 'middle',
+                     display: 'inline-block',
+                   }}
+                  >{curr.name}</span>
+                  </div>
+                  </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
         <Button
           variant="contained"
           onClick={() => {
+            setShowSnippetCreation(false);
             setShowSnippetCreationOptions(false);
             setSelectionVirtualElement(undefined);
+            createNewSnippet(
+              setAddSnippetStatus,
+              {
+                ...newSnippetData,
+                label_id: selectedLabel,
+              },
+              setRefreshSnippets,
+            );
           }}
         >
           Add Snippet
@@ -204,17 +270,31 @@ export default function DocumentView() {
   } else {
     snippetOptions = (
       <Button
-        onClick={() => {
+        onClick={async () => {
           setShowSnippetCreationOptions(true);
+          const offset = currDocument.content!
+            .indexOf(
+              window.getSelection()?.getRangeAt(0)!.toString()!.replaceAll('\n\n', '\n')!,
+            );
+          setNewSnippetData({
+            document_id: currDocument.id!,
+            label_id: selectedLabel,
+            length: (window.getSelection()!.toString().length),
+            char_offset: offset + currDocument.content!.substring(0, offset).split('\n').length - 1,
+          });
           setContentCleaned(addSnippets(
             currDocument.content || '',
-            snippetData.concat([{
+            [{
               id: -1,
               document_id: currDocument.id,
               label_id: -1,
               length: (window.getSelection()!.toString().length),
-              char_offset: currDocument.content!.indexOf(window.getSelection()!.toString()) + 3,
-            }] as Snippet[]),
+              // This is not the right way to do this, but I'm leaving it for now
+              // TODO: find a better way to grab index
+              char_offset: currDocument.content!
+                .replaceAll('\n', '\n\n')
+                .indexOf(window.getSelection()?.getRangeAt(0)!.toString()!),
+            }] as Snippet[],
           ));
         }}
         variant="text"
@@ -230,7 +310,17 @@ export default function DocumentView() {
         <Typography variant="h2" textAlign="center">
             {currDocument.title}
         </Typography>
-
+        {(addSnippetStatus === Status.Succeeded)
+          ? (
+          <Alert
+            style={{ maxWidth: '1000px', margin: 'auto' }}
+            onClose={() => {
+              setAddSnippetStatus(Status.Initial);
+            }}
+            severity="success">
+              Snippet Created Successfully
+            </Alert>)
+          : (<></>)}
         <div style={{ padding: '20px' }} />
               {/* Handles Pop-up 'Snippet' Menu */}
             <Popper

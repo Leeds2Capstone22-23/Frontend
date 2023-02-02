@@ -45,3 +45,10 @@ export interface Snippet {
   length: number,
   char_offset: number,
 }
+
+export interface NewSnippet {
+  document_id: number,
+  label_id: number,
+  length: number,
+  char_offset: number,
+}

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Buffer } from 'buffer';
 import { debounce } from 'lodash';
 import {
@@ -13,7 +14,7 @@ import {
   snippetSuccess,
 } from '../redux/reducers/snippetReducer';
 import {
-  Label, Doc, Status, newUserRegistration, newUserLogin, Snippet,
+  Label, Doc, Status, newUserRegistration, newUserLogin, Snippet, NewSnippet,
 } from '../types/types';
 import { defaultStore } from '../redux';
 import {
@@ -383,6 +384,31 @@ export async function createNewDoc(
       // Convert to appropriate data type
       if (result.data) {
         setStatus(Status.Succeeded);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
+
+export async function createNewSnippet(
+  setStatus:Function,
+  newSnippet:NewSnippet,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      insert_snippets(objects: {document_id: ${newSnippet.document_id}, char_offset: ${newSnippet.char_offset}, length: ${newSnippet.length}, label_id: ${newSnippet.label_id}}) {
+        affected_rows
+      }
+    }`,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
       } else {
         setStatus(Status.Failed);
       }
