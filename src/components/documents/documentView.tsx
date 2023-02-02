@@ -90,9 +90,8 @@ export default function DocumentView() {
           ${
   (curr.label_id !== -1) ? (
     colors[labelData.find((labels) => curr.label_id === labels.id)?.color!]
-  ) : ('rgba(255,255,255,0.5)')
-}
-          '>`,
+  ) : ('#FFFFFF')
+}C0;'>`,
         ]);
         arr.push([
           curr.char_offset + curr.length,
