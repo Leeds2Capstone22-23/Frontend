@@ -57,3 +57,8 @@ export interface NewDoc {
   title: string,
   content: string,
 }
+
+export interface NewLabel {
+  title: string,
+  color: number,
+}

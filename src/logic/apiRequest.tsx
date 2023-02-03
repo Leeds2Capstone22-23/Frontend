@@ -14,7 +14,7 @@ import {
   snippetSuccess,
 } from '../redux/reducers/snippetReducer';
 import {
-  Label, Doc, Status, newUserRegistration, newUserLogin, Snippet, NewSnippet, NewDoc,
+  Label, Doc, Status, newUserRegistration, newUserLogin, Snippet, NewSnippet, NewDoc, NewLabel,
 } from '../types/types';
 import { defaultStore } from '../redux';
 import {
@@ -343,29 +343,6 @@ export async function registerNewUser(
   throw new Error('Please enter a username and password.');
 }
 
-export async function createNewLabel(
-  setStatus:Function,
-  labelName:string,
-) {
-  setStatus(Status.Loading);
-  await fetchData(
-    `
-      mutation {
-        insert_labels(objects: {color: 10, name: "${labelName}"}) {
-          affected_rows
-        }
-      }`,
-  )
-    .then((result) => {
-      // Convert to appropriate data type
-      if (result.data) {
-        setStatus(Status.Succeeded);
-      } else {
-        setStatus(Status.Failed);
-      }
-    });
-}
-
 export async function createNewSnippet(
   setStatus:Function,
   newSnippet:NewSnippet,
@@ -403,6 +380,31 @@ export async function createNewDocument(
       insert_documents(objects: {content: """${newDoc.content}""", title: "${newDoc.title}"}) {
     affected_rows
   }
+    }`,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
+
+export async function createNewLabel(
+  setStatus:Function,
+  newLabel:NewLabel,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      insert_labels(objects: {color: ${newLabel.color}, name: "${newLabel.title}"}) {
+        affected_rows
+      }
     }`,
   )
     .then((result) => {

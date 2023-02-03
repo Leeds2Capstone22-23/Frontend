@@ -89,7 +89,7 @@ export default function DocumentView() {
           `<span style='background-color: 
           ${
   (curr.label_id !== -1) ? (
-    colors[labelData.find((labels) => curr.label_id === labels.id)?.color!]
+    colors[labelData.find((labels) => curr.label_id === labels.id)?.color!].color
   ) : ('#FFFFFF')
 }C0;'>`,
         ]);

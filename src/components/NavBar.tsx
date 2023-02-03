@@ -111,7 +111,7 @@ export default function NavBar(props:any) {
                     <LabelIcon sx={{
                       color:
                       (curr.color >= 0 && curr.color < colors.length)
-                        ? colors[curr.color]
+                        ? colors[curr.color].color
                         : '',
                     }}
                     />
