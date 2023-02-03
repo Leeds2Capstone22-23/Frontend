@@ -52,3 +52,8 @@ export interface NewSnippet {
   length: number,
   char_offset: number,
 }
+
+export interface NewDoc {
+  title: string,
+  content: string,
+}

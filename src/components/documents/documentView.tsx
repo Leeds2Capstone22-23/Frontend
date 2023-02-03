@@ -306,7 +306,11 @@ export default function DocumentView() {
   if (documentStatus === Status.Succeeded && currDocument) {
     return (
         <>
-        <Typography variant="h2" textAlign="center">
+        <Typography variant="h2" textAlign="center"
+        style={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}>
             {currDocument.title}
         </Typography>
         {(addSnippetStatus === Status.Succeeded)

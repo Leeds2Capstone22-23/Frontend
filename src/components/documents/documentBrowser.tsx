@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { DocData } from '../../redux/hooks/docHook';
 import { Doc } from '../../types/types';
 import routerRedirect from '../../logic/routerRedirect';
+import DocumentCreation from './documentCreation';
 
 function createData(doc: Doc) {
   const { title, id } = doc;
@@ -26,11 +27,19 @@ function createData(doc: Doc) {
 }
 
 export default function DocumentBrowser() {
-  const docsData = DocData();
-
   const [docsFiltered, setDocsFiltered] = useState<Doc[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDocumentCreation, setShowDocumentCreation] = useState(false);
+  const [refreshDocs, setRefreshDocs] = useState(false);
   const navigate = useNavigate();
+
+  const docsData = DocData(refreshDocs);
+
+  useEffect(() => {
+    if (refreshDocs) {
+      setRefreshDocs(false);
+    }
+  }, [refreshDocs]);
 
   /**
    * Handles searching for filtering documents
@@ -62,6 +71,12 @@ export default function DocumentBrowser() {
   }, [docsData]);
 
   return (
+    <>
+    <DocumentCreation
+      showModal={showDocumentCreation}
+      setShowModal={setShowDocumentCreation}
+      setRefreshDocs={setRefreshDocs}
+      />
     <div style={{
       display: 'flex',
       flexDirection: 'column',
@@ -136,8 +151,14 @@ export default function DocumentBrowser() {
         </TableContainer>
       </div>
       <div style={{ marginTop: '40px', textAlign: 'center', minHeight: '' }}>
-        <Button variant="outlined">Create Document</Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setShowDocumentCreation(true);
+          }}
+        >Create Document</Button>
       </div>
     </div>
+    </>
   );
 }
