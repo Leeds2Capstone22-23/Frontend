@@ -10,7 +10,6 @@ import { LabelData } from '../../redux/hooks/labelHook';
 import { colors } from '../../styling/Colors';
 import Page404 from '../Page404';
 import { SnippetData } from '../../redux/hooks/snippetHook';
-import { Doc, Snippet } from '../../types/types';
 import { DocData } from '../../redux/hooks/docHook';
 import redirect from '../../logic/routerRedirect';
 
@@ -43,14 +42,15 @@ export default function LabelView() {
     labelSnippets.forEach((currSnippet) => {
       const doc = docData.find((searchDoc) => (searchDoc.id === currSnippet.document_id));
       if (doc) {
-        const snippetContent = doc.content.substring(
+        const rawtext = doc.content.replaceAll('\n', '\n\n');
+        const snippetContent = rawtext.substring(
           currSnippet.char_offset,
           currSnippet.char_offset + currSnippet.length,
         );
-        const text = snippetContent.replaceAll('\n', '\n\n');
+
         storage.push({
           id: currSnippet.id,
-          text,
+          text: snippetContent,
           documentID: doc.id,
           documentTitle: doc.title,
         });
@@ -87,7 +87,7 @@ export default function LabelView() {
   useEffect(() => {
     setSnippetsData(generateSnippets());
     setSnippetsFiltered(generateSnippets());
-  }, [snippetData, docData, labelData]);
+  }, [snippetData, docData, labelData, labelID]);
 
   if (currLabel) {
     return (
@@ -166,6 +166,7 @@ export default function LabelView() {
             style= {{
               margin: '5px',
               marginRight: 'auto',
+              maxWidth: '99%',
             }}
             onClick={(event) => {
               redirect(event, `/documents/${currSnippet.documentID}`, navigate);
@@ -180,7 +181,6 @@ export default function LabelView() {
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                width: '100%',
               }}
             >
               {currSnippet.documentTitle}
