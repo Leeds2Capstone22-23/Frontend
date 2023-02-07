@@ -1,7 +1,7 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 import {
-    UserAuth,
-    Status
+  UserAuth,
+  Status,
 } from '../../types/types';
 
 /**
@@ -27,18 +27,26 @@ export const saveAuth = createAction<UserAuth>('auth/data/save');
 export const clearAuth = createAction('auth/data/clear');
 
 const blankUser = {
-    userSecret: '',
-    username: '',
-    fullName: '',
-    userId: -1,
+  userSecret: '',
+  username: '',
+  fullName: '',
+  userId: -1,
 } as UserAuth;
 
-export const authDataReducer = createReducer(
-    blankUser, (builder) => {
+export const authDataReducer = createReducer(blankUser, (builder) => {
   builder
-    .addCase(saveAuth, (_, action) => action.payload)
+    .addCase(saveAuth, (_, action) => {
+      const date = new Date();
+      // Add seven days to current date
+      date.setDate(date.getDate() + 7);
+      // eslint-disable-next-line max-len
+      document.cookie = `username=${action.payload.username}, secret=${action.payload.userSecret};expires=${date.toUTCString()};path=/;`;
+      return action.payload;
+    })
     .addCase(clearAuth, () => {
-        //Clear local storage?
-        return blankUser
+      const date = new Date();
+      date.setDate(0);
+      document.cookie = `username=, secret=;expires=${date.toUTCString()};path=/;`;
+      return blankUser;
     });
 });

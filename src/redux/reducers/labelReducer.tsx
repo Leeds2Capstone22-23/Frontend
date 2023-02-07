@@ -1,7 +1,7 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
 import {
-    Label,
-    Status
+  Label,
+  Status,
 } from '../../types/types';
 
 /**

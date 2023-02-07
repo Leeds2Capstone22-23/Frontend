@@ -1,19 +1,36 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, createAction } from '@reduxjs/toolkit';
 import { exampleReducer } from './reducers/exampleReducer';
 import { labelDataReducer, labelStatusReducer } from './reducers/labelReducer';
 import { docDataReducer, docStatusReducer } from './reducers/docReducer';
-import {authDataReducer, authStatusReducer} from './reducers/authReducer'
+import { snippetDataReducer, snippetStatusReducer } from './reducers/snippetReducer';
+import { authDataReducer, authStatusReducer } from './reducers/authReducer';
 
 // This is our main store
+
+const appReducer = combineReducers({
+  /* your app’s top-level reducers */
+  exampleReducer,
+  labelDataReducer,
+  labelStatusReducer,
+  docDataReducer,
+  docStatusReducer,
+  authDataReducer,
+  authStatusReducer,
+  snippetDataReducer,
+  snippetStatusReducer,
+});
+
+export const logoutAction = createAction('Logout');
+export const rootReducer = (state, action) => {
+  if (action.type === 'Logout') {
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+};
 export const defaultStore = configureStore({
   reducer: {
-    exampleReducer,
-    labelDataReducer,
-    labelStatusReducer,
-    docDataReducer,
-    docStatusReducer,
-    authDataReducer,
-    authStatusReducer,
+    rootReducer,
   },
 });
 
