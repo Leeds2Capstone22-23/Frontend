@@ -11,6 +11,7 @@ module.exports = {
     'airbnb-base',
     'airbnb-typescript/base',
     'plugin:react/recommended',
+    'plugin:storybook/recommended',
   ],
   plugins: ['@typescript-eslint'],
   rules: {
