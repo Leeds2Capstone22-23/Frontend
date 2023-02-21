@@ -17,3 +17,9 @@ You will also see any lint errors in the console.
 
 Launches the test runner in the interactive watch mode.
 
+## Running Storybook:
+
+### `npm run storybook` to run the Storybook page
+
+Runs on [http://localhost:6006](http://localhost:6006).
+
