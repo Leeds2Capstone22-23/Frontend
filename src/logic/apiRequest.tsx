@@ -32,7 +32,7 @@ export async function fetchData(
   setErrors?:Function,
   auth?:string,
 ) {
-  const url = 'http://localhost:8080/v1/graphql';
+  const url = 'https://leeds.jaryd.io/api/v1/';
   const user = defaultStore.getState().rootReducer.authDataReducer;
   const response = await fetch(
     `${url}`,
@@ -40,6 +40,8 @@ export async function fetchData(
       method: 'POST',
       credentials: 'omit',
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'Access-Control-Allow-Origin': 'https://leeds.jaryd.io/',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
         Authorization:

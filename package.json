@@ -65,7 +65,9 @@
     "lint-fix": "eslint --fix --ext .js,.ts,.tsx ./",
     "lint": "eslint --ext .js,.ts,.tsx ./",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "deploy-dev": "git push --repo='snpt-dev@198.59.83.84:/home/snpt-dev/Frontend/frontend.git'"
+    
   },
   "browserslist": {
     "production": [
