@@ -2,8 +2,8 @@ version: '3.7'
 
 services:
 
-  Frontend-Prod:
-    container_name: Frontend-Prod
+  frontend-drod:
+    container_name: frontend-prod
     build:
       context: .
       dockerfile: Dockerfile.prod
