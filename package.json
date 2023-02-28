@@ -67,7 +67,7 @@
     "lint": "eslint --ext .js,.ts,.tsx ./",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "deploy-dev": "git push dev HEAD:master"
+    "deploy-dev": "git push snpt-cumulus-dev HEAD:master"
   },
   "browserslist": {
     "production": [
