@@ -14,4 +14,5 @@ module.exports = {
   },
   collectCoverage: true,
   setupFiles: ['<rootDir>/Tests/Mocks/apiRequestMock.tsx'],
+
 };
