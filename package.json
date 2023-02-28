@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.5.16",
@@ -67,7 +68,6 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "deploy-dev": "git push dev HEAD:master"
-    
   },
   "browserslist": {
     "production": [

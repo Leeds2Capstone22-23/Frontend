@@ -1,7 +1,7 @@
 # build environment
 FROM node:19-alpine as build
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+WORKDIR /
+ENV PATH /node_modules/.bin:$PATH
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm ci --silent
