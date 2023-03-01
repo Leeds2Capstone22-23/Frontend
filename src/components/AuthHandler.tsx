@@ -81,7 +81,7 @@ export default function AuthHandler() {
         <>
           <div style={{ height: '40px' }} />
           <Typography variant="h4" textAlign="center">
-              Logging In...
+              Logging In
             </Typography>
           <DialogContent
             sx={{
