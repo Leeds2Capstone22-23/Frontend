@@ -41,7 +41,7 @@ export default function AuthHandler() {
         <>
           <div style={{ height: '20px' }} />
           <Typography variant="h2" textAlign="center">
-              Welcome To Tag &apos;n Bag!
+              Welcome To SNPT
             </Typography>
           <DialogContent
             sx={{
