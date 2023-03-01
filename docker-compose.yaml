@@ -7,8 +7,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - /etc/letsencrypt/live/leeds-dev.jaryd.io/:/ssl/
     ports:
       - 80:80
       - 443:443
