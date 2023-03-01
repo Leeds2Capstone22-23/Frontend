@@ -20,7 +20,7 @@ RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine
-COPY /ssl /home/ssl
+COPY /ssl /etc/nginx/ssl
 COPY --from=build /build /usr/share/nginx/html
 # new
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
