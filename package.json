@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.5.16",
@@ -65,7 +66,9 @@
     "lint-fix": "eslint --fix --ext .js,.ts,.tsx ./",
     "lint": "eslint --ext .js,.ts,.tsx ./",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "deploy-dev": "git push snpt-dev@198.59.83.84:/home/snpt-dev/Frontend/frontend.git HEAD:master",
+    "deploy-prod": "git push snpt-prod@198.59.83.20:/home/snpt-prod/Frontend/frontend.git HEAD:master"
   },
   "browserslist": {
     "production": [
