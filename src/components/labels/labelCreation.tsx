@@ -17,6 +17,7 @@ export default function LabelCreation(props: LabelCreationProps) {
   // ** STATE **
   const [labelTitle, setLabelTitle] = useState('');
   const [labelColor, setLabelColor] = useState(-1);
+  const [labelInvalid, setLabelInvalid] = useState(true);
 
   const labelData = LabelData();
 
@@ -25,7 +26,12 @@ export default function LabelCreation(props: LabelCreationProps) {
     event: React.MouseEvent<HTMLElement>,
     newColor: string,
   ) => {
-    setLabelColor(Number(newColor));
+    if (newColor !== null) {
+      setLabelColor(Number(newColor));
+      if (labelTitle != '' && Number(newColor) > -1) {
+        setLabelInvalid(false);
+      }
+    }
   };
   return (
     <>
@@ -57,6 +63,11 @@ export default function LabelCreation(props: LabelCreationProps) {
         value={labelTitle}
         onChange={(event) => {
           setLabelTitle(event.target.value);
+          if (event.target.value != '' && labelColor > -1) {
+            setLabelInvalid(false);
+          } else {
+            setLabelInvalid(true);
+          }
         }}
         />
         <div style={{ height: '2vh' }} />
@@ -90,6 +101,7 @@ export default function LabelCreation(props: LabelCreationProps) {
         <div style={{ marginTop: '40px', textAlign: 'center', minHeight: '' }}>
         <Button
           variant="outlined"
+          disabled={labelInvalid}
           onClick={() => {
             createNewLabel(
               () => {},
@@ -99,6 +111,9 @@ export default function LabelCreation(props: LabelCreationProps) {
               },
               props.setRefreshDocs,
             );
+            setLabelColor(-1);
+            setLabelTitle('');
+            setLabelInvalid(true);
             props.setShowModal(false);
           }}
         >Create Label</Button>
