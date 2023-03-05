@@ -33,6 +33,7 @@ export async function fetchData(
   auth?:string,
 ) {
   const url = 'http://localhost:8080/v1/graphql';
+  //const url = 'https://leeds.jaryd.io/api/v1/';
   const user = defaultStore.getState().rootReducer.authDataReducer;
   const response = await fetch(
     `${url}`,
@@ -371,7 +372,7 @@ export async function createNewSnippet(
 export async function createNewDocument(
   setStatus:Function,
   newDoc:NewDoc,
-  setRefreshSnippets: Function,
+  setRefreshDocs: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
@@ -386,7 +387,7 @@ export async function createNewDocument(
       // Convert to appropriate data type
       if (result.data) {
         setStatus(Status.Succeeded);
-        setRefreshSnippets(true);
+        setRefreshDocs(true);
       } else {
         setStatus(Status.Failed);
       }
@@ -396,7 +397,7 @@ export async function createNewDocument(
 export async function createNewLabel(
   setStatus:Function,
   newLabel:NewLabel,
-  setRefreshSnippets: Function,
+  setRefreshLabels: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
@@ -411,9 +412,58 @@ export async function createNewLabel(
       // Convert to appropriate data type
       if (result.data) {
         setStatus(Status.Succeeded);
-        setRefreshSnippets(true);
+        setRefreshLabels(true);
       } else {
         setStatus(Status.Failed);
       }
     });
 }
+
+/*
+export async function deleteSnippet(
+  snippetID: Number,
+  setStatus: Function,
+  setRefreshSnippets: Function
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {id: {eq: ${snippetID} }}
+      ) {
+        affected_rows
+      }
+    }
+    `,
+  )
+  .then((result) => {
+    if (result.data) {
+      setStatus(Status.Succeeded);
+      setRefreshSnippets(true);
+    } else {
+      setStatus(Status.Failed);
+    }
+  })
+}
+
+export async function deleteLabel(
+  labelID: number,
+  setStatus: Function,
+  setRefreshLabels: Function,
+  setRefreshSnippets: Function
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {label_id: {eq: ${labelID} }}
+      ) {
+        affected_rows
+      }
+    }
+    `
+  )
+}
+*/
