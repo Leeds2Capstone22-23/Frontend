@@ -1,11 +1,12 @@
 import {
+  Box,
   Button,
   Card,
-  Link,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import LabelIcon from '@mui/icons-material/Label';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { LabelData } from '../../redux/hooks/labelHook';
 import LabelCreation from './labelCreation';
@@ -41,83 +42,111 @@ export default function LabelBrowser() {
       style={{
         maxHeight: '80vh',
         minHeight: '0px',
-        overflow: 'scroll',
+        overflowY: 'scroll',
         maxWidth: '1000px',
         margin: 'auto',
       }}
     >
     {
       labelData.map((currLabel) => (
-        <Card
-          key={currLabel.id}
-          style={{
-            marginTop: '25px',
-            marginBottom: '25px',
-            padding: '15px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
         >
-          <Button
+          <Card
             key={currLabel.id}
-            href={`/labels/${currLabel.id}`}
-            style= {{
-              height: '75px',
-            }}
-            onClick={(event) => {
-              redirect(event, `/labels/${currLabel.id}`, navigate);
+            style={{
+              marginTop: '25px',
+              marginBottom: '25px',
+              marginRight: '10px',
+              padding: '15px',
+              display: 'inline-flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '90%',
             }}
           >
-            <LabelIcon
+            <Button
+              key={currLabel.id}
+              href={`/labels/${currLabel.id}`}
+              style= {{
+                height: '75px',
+              }}
+              onClick={(event) => {
+                redirect(event, `/labels/${currLabel.id}`, navigate);
+              }}
+            >
+              <LabelIcon
+                sx={{
+                  color:
+                  (currLabel.color >= 0 && currLabel.color < colors.length)
+                    ? colors[currLabel.color].color
+                    : '',
+                  fontSize: '50px',
+                  verticalAlign: 'middle',
+                  display: 'inline-block',
+                  marginRight: '10px',
+                }}
+              />
+              <Typography
+                variant="h3"
+                textAlign="left"
+                style={{
+                  verticalAlign: 'middle',
+                  display: 'inline-block',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                >
+                {currLabel.name}
+              </Typography>
+            </Button>
+            <div
+            style={{
+              textAlign: 'center',
+            }}
+            >
+              <Typography
+                  variant="h4"
+                  textAlign="right"
+                  style={{
+                    textAlign: 'center',
+                    margin: 'auto',
+                  }}
+              >
+                {snippetData.filter((currSnippet) => (currSnippet.label_id === currLabel.id)).length}
+              </Typography>
+              <Typography
+                  variant="h5"
+                  textAlign="right"
+              > 
+                Snippets
+              </Typography>
+            </div>
+          </Card>
+          
+          <Button
+            key={"d" + currLabel.id }
+            onClick={(event) => {
+              //pop up a thing asking to delete
+              //deleteLabel(currLabel.id)
+              //pop up a "label x" deleted successfully
+              //should refresh after deletion
+            }}
+          >
+            <DeleteIcon 
+              className='deleteButton'
               sx={{
-                color:
-                (currLabel.color >= 0 && currLabel.color < colors.length)
-                  ? colors[currLabel.color].color
-                  : '',
                 fontSize: '50px',
                 verticalAlign: 'middle',
                 display: 'inline-block',
-                marginRight: '10px',
               }}
             />
-            <Typography
-              variant="h3"
-              textAlign="left"
-              style={{
-                verticalAlign: 'middle',
-                display: 'inline-block',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-              >
-              {currLabel.name}
-            </Typography>
+
           </Button>
-          <div
-          style={{
-            textAlign: 'center',
-          }}
-          >
-            <Typography
-                variant="h4"
-                textAlign="right"
-                style={{
-                  textAlign: 'center',
-                  margin: 'auto',
-                }}
-            >
-              {snippetData.filter((currSnippet) => (currSnippet.label_id === currLabel.id)).length}
-            </Typography>
-            <Typography
-                variant="h5"
-                textAlign="right"
-            >
-              Snippets
-            </Typography>
-          </div>
-        </Card>
+        </Box>
       ))
     }
     </div>
