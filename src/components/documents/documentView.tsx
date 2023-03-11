@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import LabelIcon from '@mui/icons-material/Label';
+import AddIcon from '@mui/icons-material/Add';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,6 +30,7 @@ import Page404 from '../Page404';
 import detectHighlight from '../../logic/detectHighlight';
 import '../../styling/main.css';
 import { createNewSnippet } from '../../logic/apiRequest';
+import LabelCreation from '../labels/labelCreation';
 
 export default function DocumentView() {
   // ** STATE **
@@ -47,7 +49,7 @@ export default function DocumentView() {
     savedSelectionLocation,
     setSavedSelectionLocation,
   ] = useState<VirtualElement | undefined>();
-  const [selectedLabel, setSelectedLabel] = useState(10);
+  const [selectedLabel, setSelectedLabel] = useState(99);
   const [contentCleaned, _setContentCleaned] = useState<any>();
   const contentCleanedRef = React.useRef(contentCleaned);
   const setContentCleaned = (data) => {
@@ -62,6 +64,8 @@ export default function DocumentView() {
     char_offset: -1,
   });
   const [addSnippetStatus, setAddSnippetStatus] = useState(Status.Initial);
+  const [showLabelCreation, setShowLabelCreation] = useState(false);
+  const [refreshLabels, setRefreshLabels] = useState(false);
 
   // ** ROUTER **
   const { documentID } = useParams();
@@ -70,7 +74,13 @@ export default function DocumentView() {
   const documentData = DocData();
   const documentStatus = DocStatus();
   const snippetData = SnippetData(refreshSnippets);
-  const labelData = LabelData();
+  const labelData = LabelData(refreshLabels);
+
+  useEffect(() => {
+    if (refreshLabels) {
+      setRefreshLabels(false);
+    }
+  }, [refreshLabels]);
 
   /**
    * This function takes the content and adds the neccessary line
@@ -243,26 +253,47 @@ export default function DocumentView() {
                   </div>
                   </MenuItem>
               ))}
+              <MenuItem key={99} value={99}>
+                <div>
+                  <AddIcon sx={{
+                    color: 'white',
+                    verticalAlign: 'middle',
+                    display: 'inline-block',
+                    marginRight: '10px',
+                  }}
+                  />
+                  <span
+                    style={{
+                      verticalAlign: 'middle',
+                      display: 'inline-block',
+                    }}
+                  >Add New Label</span>
+                </div>
+              </MenuItem>
             </Select>
           </FormControl>
         </div>
         <Button
           variant="contained"
           onClick={() => {
-            setShowSnippetCreation(false);
-            setShowSnippetCreationOptions(false);
-            setSelectionVirtualElement(undefined);
-            createNewSnippet(
-              setAddSnippetStatus,
-              {
-                ...newSnippetData,
-                label_id: selectedLabel,
-              },
-              setRefreshSnippets,
-            );
+            if (selectedLabel < 99) {
+              setShowSnippetCreation(false);
+              setShowSnippetCreationOptions(false);
+              setSelectionVirtualElement(undefined);
+              createNewSnippet(
+                setAddSnippetStatus,
+                {
+                  ...newSnippetData,
+                  label_id: selectedLabel,
+                },
+                setRefreshSnippets,
+              );
+            } else {
+              setShowLabelCreation(true);
+            }
           }}
         >
-          Add Snippet
+          {(selectedLabel < 99) ? ('Add Snippet') : ('Create Label')}
         </Button>
       </Box>
     );
@@ -306,6 +337,11 @@ export default function DocumentView() {
   if (documentStatus === Status.Succeeded && currDocument) {
     return (
         <>
+        <LabelCreation
+          showModal={showLabelCreation}
+          setShowModal={setShowLabelCreation}
+          setRefreshDocs={setRefreshLabels}
+        />
         <Typography variant="h2" textAlign="center"
         style={{
           userSelect: 'none',
