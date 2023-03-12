@@ -33,7 +33,7 @@ export async function fetchData(
   auth?:string,
 ) {
   const url = 'http://localhost:8080/v1/graphql';
-  //const url = 'https://leeds.jaryd.io/api/v1/';
+  // const url = 'https://leeds.jaryd.io/api/v1/';
   const user = defaultStore.getState().rootReducer.authDataReducer;
   const response = await fetch(
     `${url}`,
@@ -419,51 +419,117 @@ export async function createNewLabel(
     });
 }
 
-/*
 export async function deleteSnippet(
   snippetID: Number,
   setStatus: Function,
-  setRefreshSnippets: Function
+  setRefreshSnippets: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
     `
     mutation {
       delete_snippets(
-        where: {id: {eq: ${snippetID} }}
+        where: {
+          id: {
+            _eq: { ${snippetID} }
+          }
+        }
       ) {
         affected_rows
       }
     }
     `,
   )
-  .then((result) => {
-    if (result.data) {
-      setStatus(Status.Succeeded);
-      setRefreshSnippets(true);
-    } else {
-      setStatus(Status.Failed);
-    }
-  })
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
 }
 
 export async function deleteLabel(
   labelID: number,
   setStatus: Function,
   setRefreshLabels: Function,
-  setRefreshSnippets: Function
+  setRefreshSnippets: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
     `
     mutation {
       delete_snippets(
-        where: {label_id: {eq: ${labelID} }}
+        where: {
+          label_id: {
+            _eq: { ${labelID} }
+          }
+        }
+      ) {
+        affected_rows
+      }
+      delete_labels(
+        where: {
+          id: {
+            _eq: { ${labelID} }
+          }
+        }
       ) {
         affected_rows
       }
     }
-    `
+    `,
   )
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+        setRefreshLabels(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
 }
-*/
+
+export async function deleteDocument(
+  docID: number,
+  setStatus: Function,
+  setRefreshDocuments: Function,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {
+          document_id: {
+            _eq: { ${docID} }
+          }
+        }
+      ) {
+        affected_rows
+      }
+      delete_documents(
+        where: {
+          id: {
+            _eq: { ${docID} }
+          }
+        }
+      ) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+        setRefreshDocuments(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
