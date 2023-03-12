@@ -12,14 +12,21 @@ import { LabelData } from '../../redux/hooks/labelHook';
 import LabelCreation from './labelCreation';
 import { colors } from '../../styling/Colors';
 import redirect from '../../logic/routerRedirect';
+import { deleteLabel } from '../../logic/apiRequest';
 import { SnippetData } from '../../redux/hooks/snippetHook';
+import DeleteConfirmation from '../deleteConfirmation';
 
 export default function LabelBrowser() {
   const [showLabelCreation, setShowLabelCreation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [refreshLabels, setRefreshLabels] = useState(false);
+  const [refreshSnippets, setRefreshSnippets] = useState(false);
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const [deleteText, setDeleteText] = useState('TEMP');
+  const [currentLabel, setCurrentLabel] = useState(-1);
 
   const labelData = LabelData(refreshLabels);
-  const snippetData = SnippetData();
+  const snippetData = SnippetData(refreshSnippets);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +35,19 @@ export default function LabelBrowser() {
     }
   }, [refreshLabels]);
 
+  useEffect(() => {
+    if (refreshSnippets) {
+      setRefreshSnippets(false);
+    }
+  }, [refreshSnippets]);
+
+  useEffect(() => {
+    if (deleteConfirmed && (currentLabel > -1)) {
+      deleteLabel(currentLabel, () => {}, setRefreshLabels, setRefreshSnippets);
+      setDeleteConfirmed(false);
+    }
+  }, [deleteConfirmed]);
+
   return (
     <>
     <LabelCreation
@@ -35,6 +55,12 @@ export default function LabelBrowser() {
       setShowModal={setShowLabelCreation}
       setRefreshDocs={setRefreshLabels}
       />
+    <DeleteConfirmation
+      showModal={showDeleteConfirmation}
+      setShowModal={setShowDeleteConfirmation}
+      setResponse={setDeleteConfirmed}
+      itemString={deleteText}
+    />
     <Typography variant="h2" textAlign="center">
     Labels
     </Typography>
@@ -50,12 +76,12 @@ export default function LabelBrowser() {
     {
       labelData.map((currLabel) => (
         <Box
+          key={currLabel.id}
           display='flex'
           justifyContent='center'
           alignItems='center'
         >
           <Card
-            key={currLabel.id}
             style={{
               marginTop: '25px',
               marginBottom: '25px',
@@ -121,22 +147,21 @@ export default function LabelBrowser() {
               <Typography
                   variant="h5"
                   textAlign="right"
-              > 
+              >
                 Snippets
               </Typography>
             </div>
           </Card>
-          
+
           <Button
-            key={"d" + currLabel.id }
-            onClick={(event) => {
-              //pop up a thing asking to delete
-              //deleteLabel(currLabel.id)
-              //pop up a "label x" deleted successfully
-              //should refresh after deletion
+            key={currLabel.id}
+            onClick={() => {
+              setCurrentLabel(currLabel.id);
+              setDeleteText(`label "${currLabel.name}"`);
+              setShowDeleteConfirmation(true);
             }}
           >
-            <DeleteIcon 
+            <DeleteIcon
               className='deleteButton'
               sx={{
                 fontSize: '50px',

@@ -431,7 +431,7 @@ export async function deleteSnippet(
       delete_snippets(
         where: {
           id: {
-            _eq: { ${snippetID} }
+            _eq: ${snippetID}
           }
         }
       ) {
@@ -463,16 +463,17 @@ export async function deleteLabel(
       delete_snippets(
         where: {
           label_id: {
-            _eq: { ${labelID} }
+            _eq: ${labelID}
           }
         }
       ) {
         affected_rows
       }
+
       delete_labels(
         where: {
           id: {
-            _eq: { ${labelID} }
+            _eq: ${labelID}
           }
         }
       ) {
@@ -505,7 +506,7 @@ export async function deleteDocument(
       delete_snippets(
         where: {
           document_id: {
-            _eq: { ${docID} }
+            _eq: ${docID}
           }
         }
       ) {
@@ -514,7 +515,7 @@ export async function deleteDocument(
       delete_documents(
         where: {
           id: {
-            _eq: { ${docID} }
+            _eq: ${docID}
           }
         }
       ) {
