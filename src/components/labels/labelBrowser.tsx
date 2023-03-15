@@ -33,20 +33,16 @@ export default function LabelBrowser() {
     if (refreshLabels) {
       setRefreshLabels(false);
     }
-  }, [refreshLabels]);
 
-  useEffect(() => {
     if (refreshSnippets) {
       setRefreshSnippets(false);
     }
-  }, [refreshSnippets]);
 
-  useEffect(() => {
     if (deleteConfirmed && (currentLabel > -1)) {
       deleteLabel(currentLabel, () => {}, setRefreshLabels, setRefreshSnippets);
       setDeleteConfirmed(false);
     }
-  }, [deleteConfirmed]);
+  }, [refreshLabels, refreshSnippets, deleteConfirmed]);
 
   return (
     <>
@@ -71,6 +67,7 @@ export default function LabelBrowser() {
         overflowY: 'scroll',
         maxWidth: '1000px',
         margin: 'auto',
+        paddingTop: '20px',
       }}
     >
     {
@@ -83,8 +80,7 @@ export default function LabelBrowser() {
         >
           <Card
             style={{
-              marginTop: '25px',
-              marginBottom: '25px',
+              marginTop: '5px',
               marginRight: '10px',
               padding: '15px',
               display: 'inline-flex',
@@ -97,7 +93,8 @@ export default function LabelBrowser() {
               key={currLabel.id}
               href={`/labels/${currLabel.id}`}
               style= {{
-                height: '75px',
+                height: '50px',
+                textTransform: 'none',
               }}
               onClick={(event) => {
                 redirect(event, `/labels/${currLabel.id}`, navigate);
@@ -109,14 +106,14 @@ export default function LabelBrowser() {
                   (currLabel.color >= 0 && currLabel.color < colors.length)
                     ? colors[currLabel.color].color
                     : '',
-                  fontSize: '50px',
+                  fontSize: '40px',
                   verticalAlign: 'middle',
                   display: 'inline-block',
                   marginRight: '10px',
                 }}
               />
               <Typography
-                variant="h3"
+                variant="h5"
                 textAlign="left"
                 style={{
                   verticalAlign: 'middle',
@@ -135,7 +132,7 @@ export default function LabelBrowser() {
             }}
             >
               <Typography
-                  variant="h4"
+                  variant="h6"
                   textAlign="right"
                   style={{
                     textAlign: 'center',
@@ -145,7 +142,7 @@ export default function LabelBrowser() {
                 {snippetData.filter((currSnippet) => (currSnippet.label_id === currLabel.id)).length}
               </Typography>
               <Typography
-                  variant="h5"
+                  variant="body1"
                   textAlign="right"
               >
                 Snippets

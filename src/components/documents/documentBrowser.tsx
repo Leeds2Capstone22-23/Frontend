@@ -11,12 +11,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import moment from 'moment';
 import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import { DocData } from '../../redux/hooks/docHook';
 import { Doc } from '../../types/types';
 import routerRedirect from '../../logic/routerRedirect';
 import DocumentCreation from './documentCreation';
+import DeleteConfirmation from '../deleteConfirmation';
+import { deleteDocument } from '../../logic/apiRequest';
 
 function createData(doc: Doc) {
   const { title, id } = doc;
@@ -30,7 +33,12 @@ export default function DocumentBrowser() {
   const [docsFiltered, setDocsFiltered] = useState<Doc[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showDocumentCreation, setShowDocumentCreation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [refreshDocs, setRefreshDocs] = useState(false);
+  const [refreshSnippets, setRefreshSnippets] = useState(false);
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
+  const [deleteText, setDeleteText] = useState('TEMP');
+  const [currentDoc, setCurrentDoc] = useState(-1);
   const navigate = useNavigate();
 
   const docsData = DocData(refreshDocs);
@@ -39,7 +47,16 @@ export default function DocumentBrowser() {
     if (refreshDocs) {
       setRefreshDocs(false);
     }
-  }, [refreshDocs]);
+
+    if (refreshSnippets) {
+      setRefreshSnippets(false);
+    }
+
+    if (deleteConfirmed && (currentDoc > -1)) {
+      deleteDocument(currentDoc, () => {}, setRefreshDocs, setRefreshSnippets);
+      setDeleteConfirmed(false);
+    }
+  }, [deleteConfirmed, refreshSnippets, refreshDocs]);
 
   /**
    * Handles searching for filtering documents
@@ -72,6 +89,12 @@ export default function DocumentBrowser() {
 
   return (
     <>
+    <DeleteConfirmation
+      showModal={showDeleteConfirmation}
+      setShowModal={setShowDeleteConfirmation}
+      setResponse={setDeleteConfirmed}
+      itemString={deleteText}
+      />
     <DocumentCreation
       showModal={showDocumentCreation}
       setShowModal={setShowDocumentCreation}
@@ -105,6 +128,11 @@ export default function DocumentBrowser() {
             aria-label="Documents"
             stickyHeader
           >
+            <colgroup>
+              <col style={{ width: '60%' }}/>
+              <col style={{ width: '25%' }}/>
+              <col style={{ width: '5%' }}/>
+            </colgroup>
             <TableHead >
               <TableRow>
                 <TableCell sx={{ backgroundColor: '#26262e' }} >
@@ -117,6 +145,7 @@ export default function DocumentBrowser() {
                     Date Created
                   </Typography>
                 </TableCell>
+                <TableCell sx={{ backgroundColor: '#26262e' }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -142,6 +171,25 @@ export default function DocumentBrowser() {
                     <Typography variant="body1">
                       {moment.parseZone(row.date).local().format('MMM Do YYYY')}
                     </Typography>
+                  </TableCell>
+                  <TableCell size='small'>
+                  <Button
+                      key={row.id}
+                      onClick={() => {
+                        setCurrentDoc(row.id);
+                        setDeleteText(`document "${row.title}"`);
+                        setShowDeleteConfirmation(true);
+                      }}
+                    >
+                      <DeleteIcon
+                        className='deleteButton'
+                        sx={{
+                          fontSize: '50px',
+                          verticalAlign: 'middle',
+                          display: 'inline-block',
+                        }}
+                      />
+                    </Button>
                   </TableCell>
                 </TableRow>
                 );
