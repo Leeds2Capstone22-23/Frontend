@@ -14,6 +14,7 @@ export default function DocumentCreation(props: DocumentCreationProps) {
   // ** STATE **
   const [docTitle, setDocTitle] = useState('');
   const [docContent, setDocContent] = useState('');
+  const [docInvalid, setDocInvalid] = useState(true);
   const handleClose = () => props.setShowModal(false);
   return (
     <>
@@ -45,6 +46,11 @@ export default function DocumentCreation(props: DocumentCreationProps) {
         value={docTitle}
         onChange={(event) => {
           setDocTitle(event.target.value);
+          if (docContent != '' && event.target.value != '') {
+            setDocInvalid(false);
+          } else {
+            setDocInvalid(true);
+          }
         }}
         />
         <div style={{ height: '2vh' }} />
@@ -58,11 +64,17 @@ export default function DocumentCreation(props: DocumentCreationProps) {
             value={docContent}
             onChange={(event) => {
               setDocContent(event.target.value);
+              if (event.target.value != '' && docTitle != '') {
+                setDocInvalid(false);
+              } else {
+                setDocInvalid(true);
+              }
             }}
         />
               <div style={{ marginTop: '40px', textAlign: 'center', minHeight: '' }}>
         <Button
           variant="outlined"
+          disabled={docInvalid}
           onClick={() => {
             createNewDocument(
               () => {},
@@ -72,6 +84,9 @@ export default function DocumentCreation(props: DocumentCreationProps) {
               },
               props.setRefreshDocs,
             );
+            setDocTitle('');
+            setDocContent('');
+            setDocInvalid(true);
             props.setShowModal(false);
           }}
         >Create Document</Button>

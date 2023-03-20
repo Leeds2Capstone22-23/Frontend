@@ -373,7 +373,7 @@ export async function createNewSnippet(
 export async function createNewDocument(
   setStatus:Function,
   newDoc:NewDoc,
-  setRefreshSnippets: Function,
+  setRefreshDocs: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
@@ -388,7 +388,7 @@ export async function createNewDocument(
       // Convert to appropriate data type
       if (result.data) {
         setStatus(Status.Succeeded);
-        setRefreshSnippets(true);
+        setRefreshDocs(true);
       } else {
         setStatus(Status.Failed);
       }
@@ -398,7 +398,7 @@ export async function createNewDocument(
 export async function createNewLabel(
   setStatus:Function,
   newLabel:NewLabel,
-  setRefreshSnippets: Function,
+  setRefreshLabels: Function,
 ) {
   setStatus(Status.Loading);
   await fetchData(
@@ -413,7 +413,123 @@ export async function createNewLabel(
       // Convert to appropriate data type
       if (result.data) {
         setStatus(Status.Succeeded);
+        setRefreshLabels(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
+
+export async function deleteSnippet(
+  snippetID: Number,
+  setStatus: Function,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {
+          id: {
+            _eq: ${snippetID}
+          }
+        }
+      ) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
         setRefreshSnippets(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
+
+export async function deleteLabel(
+  labelID: number,
+  setStatus: Function,
+  setRefreshLabels: Function,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {
+          label_id: {
+            _eq: ${labelID}
+          }
+        }
+      ) {
+        affected_rows
+      }
+
+      delete_labels(
+        where: {
+          id: {
+            _eq: ${labelID}
+          }
+        }
+      ) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+        setRefreshLabels(true);
+      } else {
+        setStatus(Status.Failed);
+      }
+    });
+}
+
+export async function deleteDocument(
+  docID: number,
+  setStatus: Function,
+  setRefreshDocuments: Function,
+  setRefreshSnippets: Function,
+) {
+  setStatus(Status.Loading);
+  await fetchData(
+    `
+    mutation {
+      delete_snippets(
+        where: {
+          document_id: {
+            _eq: ${docID}
+          }
+        }
+      ) {
+        affected_rows
+      }
+      delete_documents(
+        where: {
+          id: {
+            _eq: ${docID}
+          }
+        }
+      ) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setStatus(Status.Succeeded);
+        setRefreshSnippets(true);
+        setRefreshDocuments(true);
       } else {
         setStatus(Status.Failed);
       }

@@ -6,6 +6,10 @@ body {
     background: rgba(0, 255, 13, 0.5);
 }
 
+.deleteButton {
+    color: #e01638;
+}
+
 .blur {
     background-size:cover;
     -webkit-filter: blur(7.5px);
