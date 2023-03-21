@@ -13,13 +13,12 @@ import { Tooltip } from '@mui/material';
 
 // ICONS
 import HomeIcon from '@mui/icons-material/Home';
-import FolderIcon from '@mui/icons-material/Folder';
-import SearchIcon from '@mui/icons-material/Search';
-import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes';
+import DescriptionIcon from '@mui/icons-material/Description';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
 import LabelIcon from '@mui/icons-material/Label';
 import MoreIcon from '@mui/icons-material/More';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
+import AddIcon from '@mui/icons-material/Add';
 
 // Locals
 import { useNavigate } from 'react-router-dom';
@@ -44,9 +43,10 @@ const Drawer = styled(MuiDrawer)(
 );
 const mainIcons = [
   { name: 'Home', icon: (<HomeIcon />), location: '/' },
-  { name: 'Search', icon: (<SearchIcon />), location: '/search' },
-  { name: 'Documents', icon: (<FolderIcon />), location: '/documents' },
-  { name: 'Snippets', icon: (<SpeakerNotesIcon />), location: '/snippets' },
+  { name: 'Documents', icon: (<DescriptionIcon />), location: '/documents' },
+  { name: 'Labels', icon: (<MoreIcon />), location: '/labels' },
+  { name: 'Snippets', icon: (<ContentCutIcon />), location: '/snippets' },
+  { name: 'Quick Add', icon: (<AddIcon />), location: '/add' },
 ];
 
 export default function NavBar(props:any) {
@@ -120,58 +120,9 @@ export default function NavBar(props:any) {
                 </ListItem>
             </Tooltip>
           ))}
-
-          <Tooltip key='Edit Labels' title='Edit Labels' placement='right' arrow>
-
-              <ListItem key='Edit Labels' disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    px: 2.5,
-                  }}
-                  // TODO: Maybe not a redirect to a new page, maybe just make with popup?
-                  onClick={(event) => {
-                    redirect(event, '/labels', navigate);
-                  }}
-                  href={'/labels'}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    justifyContent: 'center',
-                  }}
-                  >
-                    <MoreIcon style={{ transform: 'scaleX(-0.75) scaleY(0.75)' }}/>
-                </ListItemIcon>
-            </ListItemButton>
-          </ListItem>
-        </Tooltip>
         </List>
         <div style={{ height: 'auto', margin: 'auto' }}/>
         <List>
-        <Tooltip key='Settings' title="Settings" placement='right' arrow>
-            <ListItem key='Settings' disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  px: 2.5,
-                }}
-                onClick={(event) => {
-                  redirect(event, '/settings', navigate);
-                }}
-                href={'/settings'}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  justifyContent: 'center',
-                }}
-                >
-                <SettingsIcon/>
-              </ListItemIcon>
-          </ListItemButton>
-          </ListItem>
-        </Tooltip>
 
         <Tooltip key='Account' title={authData.username} placement='right' arrow>
             <ListItem key='Account' disablePadding sx={{ display: 'block' }}>

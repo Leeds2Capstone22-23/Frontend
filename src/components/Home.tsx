@@ -47,7 +47,7 @@ export default function Home() {
     <>
         <div style={{ height: '10vh' }} />
         <Typography variant="h2" textAlign="center">
-            Welcome To Tag &apos;n Bag!
+            Welcome To SNPT
         </Typography>
         <div style={{ height: '20vh' }} />
         <Typography variant="h4" textAlign="center">
