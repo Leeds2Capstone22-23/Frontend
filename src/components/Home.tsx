@@ -4,6 +4,7 @@ import {
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import redirect from '../logic/routerRedirect';
 import { DocData, DocStatus } from '../redux/hooks/docHook';
 import { LabelData, LabelStatus } from '../redux/hooks/labelHook';
@@ -45,9 +46,9 @@ export default function Home() {
   const snippetStatus = SnippetStatus();
   return (
     <>
-        <div style={{ height: '10vh' }} />
+        <div style={{ height: '9vh' }} />
         <Typography variant="h2" textAlign="center">
-            Welcome To SNPT
+            Welcome To <Box sx={{ fontWeight: 'bold' }}>SNPT</Box>
         </Typography>
         <div style={{ height: '20vh' }} />
         <Typography variant="h4" textAlign="center">

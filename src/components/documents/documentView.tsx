@@ -321,6 +321,7 @@ export default function DocumentView() {
               length: (window.getSelection()!.toString().length),
               // This is not the right way to do this, but I'm leaving it for now
               // TODO: find a better way to grab index
+              // this searches for the first instance of the first letter of the highlight. :( !
               char_offset: currDocument.content!
                 .replaceAll('\n', '\n\n')
                 .indexOf(window.getSelection()?.getRangeAt(0)!.toString()!),
