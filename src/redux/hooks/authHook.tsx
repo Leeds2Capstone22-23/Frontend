@@ -7,15 +7,24 @@ import { Status } from '../../types/types';
  * STATUS
  */
 export function AuthStatus() {
-  return useSelector((state: RootStore) => state.rootReducer.authStatusReducer);
+  return useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.authStatusReducer;
+  });
 }
 
 /**
  * DATA
  */
 export function AuthData(forceRefresh = false) {
-  const userAuthData = useSelector((state: RootStore) => state.rootReducer.authDataReducer);
-  const userAuthStatus = useSelector((state: RootStore) => state.rootReducer.authStatusReducer);
+  const userAuthData = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.authDataReducer;
+  });
+  const userAuthStatus = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.authStatusReducer;
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {

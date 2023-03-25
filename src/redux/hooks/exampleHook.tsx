@@ -6,7 +6,10 @@ import { RootStore } from '..';
  * STATUS
  */
 export function ExampleHook() {
-  const status = useSelector((state: RootStore) => state.rootReducer.exampleReducer);
+  const status = useSelector((state: RootStore) => {
+    const tmp = state as any; // gets mad about PartialPersist otherwise
+    return tmp.rootReducer.exampleReducer;
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {

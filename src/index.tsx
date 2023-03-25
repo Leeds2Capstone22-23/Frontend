@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material';
+import { PersistGate } from 'redux-persist/integration/react';
 import AuthHandler from './components/AuthHandler';
 import reportWebVitals from './reportWebVitals';
-import { defaultStore } from './redux';
+import { defaultStore, persistor } from './redux';
 import { theme } from './styling/MainTheme';
 
 const root = ReactDOM.createRoot(
@@ -14,7 +15,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
         <Provider store={defaultStore}>
+          <PersistGate loading={null} persistor={persistor}>
             <AuthHandler />
+          </PersistGate>
         </Provider>
     </ThemeProvider>
   </React.StrictMode>,

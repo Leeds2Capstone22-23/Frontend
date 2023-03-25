@@ -9,15 +9,24 @@ import { AuthStatus } from './authHook';
  * STATUS
  */
 export function SnippetStatus() {
-  return useSelector((state: RootStore) => state.rootReducer.snippetStatusReducer);
+  return useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.snippetStatusReducer;
+  });
 }
 
 /**
  * DATA
  */
 export function SnippetData(forceRefresh = false) {
-  const snippetsData = useSelector((state: RootStore) => state.rootReducer.snippetDataReducer);
-  const snippetsStatus = useSelector((state: RootStore) => state.rootReducer.snippetStatusReducer);
+  const snippetsData = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.snippetDataReducer;
+  });
+  const snippetsStatus = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.snippetStatusReducer;
+  });
   const authStatus = AuthStatus();
   const dispatch = useDispatch();
 

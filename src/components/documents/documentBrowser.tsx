@@ -79,7 +79,7 @@ export default function DocumentBrowser() {
           ],
         })
           .search(newSearchQuery)
-          .map((element) => element.item),
+          .map((element) => element.item) as any,
       );
     }
   }

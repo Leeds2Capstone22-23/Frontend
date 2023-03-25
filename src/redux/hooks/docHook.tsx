@@ -9,15 +9,24 @@ import { AuthStatus } from './authHook';
  * STATUS
  */
 export function DocStatus() {
-  return useSelector((state: RootStore) => state.rootReducer.docStatusReducer);
+  return useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.docStatusReducer;
+  });
 }
 
 /**
  * DATA
  */
 export function DocData(forceRefresh = false) {
-  const docsData = useSelector((state: RootStore) => state.rootReducer.docDataReducer);
-  const docsStatus = useSelector((state: RootStore) => state.rootReducer.docStatusReducer);
+  const docsData = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.docDataReducer;
+  });
+  const docsStatus = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.docStatusReducer;
+  });
   const authStatus = AuthStatus();
   const dispatch = useDispatch();
 
