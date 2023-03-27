@@ -1,14 +1,9 @@
 import {
-  Button, Link, TextField, Typography,
+  Button, TextField, Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import moment from 'moment';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,18 +11,10 @@ import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import { DocData } from '../../redux/hooks/docHook';
 import { Doc } from '../../types/types';
-import routerRedirect from '../../logic/routerRedirect';
+import redirect from '../../logic/routerRedirect';
 import DocumentCreation from './documentCreation';
 import DeleteConfirmation from '../deleteConfirmation';
 import { deleteDocument } from '../../logic/apiRequest';
-
-function createData(doc: Doc) {
-  const { title, id } = doc;
-  const date = doc.time_added;
-  return {
-    title, date, id,
-  };
-}
 
 export default function DocumentBrowser() {
   const [docsFiltered, setDocsFiltered] = useState<Doc[]>([]);
@@ -72,6 +59,7 @@ export default function DocumentBrowser() {
           threshold: 0.3,
           keys: [
             'title',
+            'time_added',
             {
               name: 'content',
               weight: 0.2,
@@ -101,102 +89,115 @@ export default function DocumentBrowser() {
       setRefreshDocs={setRefreshDocs}
       />
     <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '95vh',
-      flex: 1,
+      maxWidth: '1000px',
+      margin: 'auto',
     }}>
       <Typography variant="h2" textAlign="center">
           Documents
       </Typography>
-      <div style={{ padding: '3vw', minHeight: '0px' }}>
-          <TextField
-            id="outlined-basic"
-            aria-label="Search"
-            onChange={ (event) => searchObjects(event.target.value)}
-            value={searchQuery}
-            label={
-              <>
-                <SearchIcon/>
-              </>
-          }
-            variant="filled"
-            style={{ width: '100%', backgroundColor: '#0f0f17' }}
-          />
-        <TableContainer component={Paper} style={{ height: '100%' }}>
-          <Table
-            aria-label="Documents"
-            stickyHeader
-          >
-            <colgroup>
-              <col style={{ width: '60%' }}/>
-              <col style={{ width: '25%' }}/>
-              <col style={{ width: '5%' }}/>
-            </colgroup>
-            <TableHead >
-              <TableRow>
-                <TableCell sx={{ backgroundColor: '#26262e' }} >
-                 <Typography variant="h6">
-                    Title
-                  </Typography>
-                </TableCell>
-                <TableCell sx={{ backgroundColor: '#26262e' }} align="right">
-                  <Typography variant="h6">
-                    Date Created
-                  </Typography>
-                </TableCell>
-                <TableCell sx={{ backgroundColor: '#26262e' }}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {docsFiltered.map((curr) => {
-                const row = createData(curr);
-                return (
-                <TableRow
-                  key={row.id}
-                  sx={{ border: 0 }}
+        <TextField
+          id="outlined-basic"
+          aria-label="Search"
+          onChange={ (event) => searchObjects(event.target.value)}
+          value={searchQuery}
+          label={
+            <>
+              <SearchIcon/>
+            </>
+        }
+          variant="filled"
+          style={{ width: '100%', backgroundColor: '#0f0f17' }}
+        />
+
+        <div
+          style={{
+            maxHeight: '70vh',
+            minHeight: '0px',
+            overflowY: 'scroll',
+            paddingTop: '20px',
+          }}
+        >
+        {
+          docsFiltered.map((currDoc) => (
+            <Box
+              key={currDoc.id}
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+            >
+              <Card
+                style={{
+                  marginTop: '5px',
+                  marginRight: '10px',
+                  padding: '15px',
+                  display: 'inline-flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '90%',
+                }}
+              >
+                <Button
+                  key={currDoc.id}
+                  href={`/documents/${currDoc.id}`}
+                  style= {{
+                    height: '50px',
+                    textTransform: 'none',
+                  }}
+                  onClick={(event) => {
+                    redirect(event, `/documents/${currDoc.id}`, navigate);
+                  }}
                 >
-                  <TableCell component="th" scope="row">
-                    <Link
-                      href={`/documents/${row.id}`}
-                      underline="hover"
-                      onClick={(event) => routerRedirect(event, `/documents/${row.id}`, navigate)}
-                    >
-                      <Typography variant="body1">
-                        {row.title}
-                      </Typography>
-                    </Link>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="body1">
-                      {moment.parseZone(row.date).local().format('MMM Do YYYY')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell size='small'>
-                  <Button
-                      key={row.id}
-                      onClick={() => {
-                        setCurrentDoc(row.id);
-                        setDeleteText(`document "${row.title}"`);
-                        setShowDeleteConfirmation(true);
+                  <Typography
+                    variant="h5"
+                    textAlign="left"
+                    style={{
+                      verticalAlign: 'middle',
+                      display: 'inline-block',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {currDoc.title}
+                  </Typography>
+                </Button>
+                <div
+                style={{
+                  textAlign: 'center',
+                }}
+                >
+                  <Typography
+                      variant="body1"
+                      textAlign="right"
+                      style={{
+                        textAlign: 'center',
+                        margin: 'auto',
                       }}
-                    >
-                      <DeleteIcon
-                        className='deleteButton'
-                        sx={{
-                          fontSize: '50px',
-                          verticalAlign: 'middle',
-                          display: 'inline-block',
-                        }}
-                      />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  >Added {moment.parseZone(currDoc.time_added).local().format('MMM Do YYYY')}
+                  </Typography>
+                </div>
+              </Card>
+
+              <Button
+                key={currDoc.id}
+                onClick={() => {
+                  setCurrentDoc(currDoc.id);
+                  setDeleteText(`document "${currDoc.title}"`);
+                  setShowDeleteConfirmation(true);
+                }}
+              >
+                <DeleteIcon
+                  className='deleteButton'
+                  sx={{
+                    fontSize: '50px',
+                    verticalAlign: 'middle',
+                    display: 'inline-block',
+                  }}
+                />
+              </Button>
+            </Box>
+          ))}
+        </div>
       </div>
       <div style={{ marginTop: '40px', textAlign: 'center', minHeight: '' }}>
         <Button
@@ -206,7 +207,6 @@ export default function DocumentBrowser() {
           }}
         >Create Document</Button>
       </div>
-    </div>
     </>
   );
 }

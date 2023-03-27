@@ -141,7 +141,7 @@ export default function LabelView() {
           style={{
             maxHeight: '80vh',
             minHeight: '0px',
-            overflow: 'scroll',
+            overflowY: 'scroll',
           }}
         >
 
