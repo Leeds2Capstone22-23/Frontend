@@ -5,11 +5,13 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Stack,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LabelIcon from '@mui/icons-material/Label';
+import DescriptionIcon from '@mui/icons-material/Description';
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import redirect from '../../logic/routerRedirect';
@@ -40,6 +42,7 @@ export default function LabelBrowser() {
     id: number,
     labelID: number,
     labelColor: number,
+    labelName: string,
     text: string,
     documentID: number,
     documentTitle: string,
@@ -61,6 +64,7 @@ export default function LabelBrowser() {
         storage.push({
           id: currSnippet.id,
           labelID: currSnippet.label_id,
+          labelName: label.name,
           labelColor: label.color,
           text: snippetContent,
           documentID: doc.id,
@@ -177,7 +181,7 @@ export default function LabelBrowser() {
 
                   style= {{
                     height: '50px',
-                    width: '20%',
+                    width: '15%',
                     textTransform: 'none',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -187,35 +191,71 @@ export default function LabelBrowser() {
                     redirect(event, `/documents/${currSnip.documentID}`, navigate);
                   }}
                 >
-                  <LabelIcon
-                    sx={{
-                      color:
-                      (currSnip.labelColor >= 0 && currSnip.labelColor < colors.length)
-                        ? colors[currSnip.labelColor].color
-                        : '',
-                      fontSize: '40px',
-                      verticalAlign: 'middle',
-                      align: 'left',
-                      marginRight: '10px',
-                    }}
-                  />
-                  <Typography
-                    variant="h6"
-                    textAlign="left"
-                    style={{
-                      verticalAlign: 'middle',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                    >
-                    {currSnip.documentTitle}
-                  </Typography>
+                  <Stack sx={{ width: '100%', justifyContent: 'left' }}>
+                    <div style={{
+                      height: '50%', width: '100%', whiteSpace: 'nowrap',
+                    }}>
+                      <DescriptionIcon
+                        sx={{
+                          fontSize: '20px',
+                          verticalAlign: 'middle',
+                          align: 'left',
+                          marginRight: '10px',
+                          display: 'inline-block',
+                        }}
+                      />
+                      <Typography
+                        variant="body2"
+                        textAlign="left"
+                        style={{
+                          maxWidth: '75%',
+                          verticalAlign: 'middle',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: 'inline-block',
+                        }}
+                        >
+                        {currSnip.documentTitle}
+                      </Typography>
+                    </div>
+                    <div style={{
+                      height: '50%', width: '100%', whiteSpace: 'nowrap',
+                    }}>
+                      <LabelIcon
+                        sx={{
+                          color:
+                          (currSnip.labelColor >= 0 && currSnip.labelColor < colors.length)
+                            ? colors[currSnip.labelColor].color
+                            : '',
+                          fontSize: '20px',
+                          verticalAlign: 'middle',
+                          align: 'left',
+                          marginRight: '10px',
+                          display: 'inline-block',
+                        }}
+                      />
+                      <Typography
+                        variant="body1"
+                        textAlign="left"
+                        style={{
+                          maxWidth: '75%',
+                          verticalAlign: 'middle',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: 'inline-block',
+                        }}
+                        >
+                        {currSnip.labelName}
+                      </Typography>
+                    </div>
+                  </Stack>
                 </Button>
               </Tooltip>
               <div
               style={{
-                maxWidth: '80%',
+                maxWidth: '85%',
                 textAlign: 'left',
               }}
                 ><Button
