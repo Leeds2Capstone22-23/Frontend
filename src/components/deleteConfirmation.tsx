@@ -14,6 +14,8 @@ interface DeleteConfirmationProps {
 export default function DeleteConfirmation(props: DeleteConfirmationProps) {
   const handleClose = () => props.setShowModal(false);
 
+  const item = (props.itemString.length > 40) ? props.itemString.slice(0, 39).concat('..."') : props.itemString;
+
   return (
     <>
     <Modal
@@ -45,7 +47,7 @@ export default function DeleteConfirmation(props: DeleteConfirmationProps) {
           </IconButton>
         </div>
       <Typography id="title" variant="h4" style={{ textAlign: 'center' }}>
-        Are you sure you want to delete {props.itemString}?
+        Are you sure you want to delete {item}?
       </Typography>
 
       <div style={{
