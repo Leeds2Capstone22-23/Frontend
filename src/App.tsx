@@ -19,7 +19,7 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/search" element={<h1>Search</h1>} />
                 <Route path="/documents/*" element={<DocumentRouter />} />
-                <Route path="/snippets" element={<SnippetRouter />} />
+                <Route path="/snippets/*" element={<SnippetRouter />} />
                 <Route path="/labels/*" element={<LabelRouter />} />
                 <Route path="/settings" element={<h1>Settings</h1>} />
                 <Route path="/account" element={<Account />} />
