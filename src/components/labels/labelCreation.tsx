@@ -1,6 +1,7 @@
 import {
-  Modal, Fade, Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup,
+  Modal, Fade, Box, Typography, TextField, Button, ToggleButton, ToggleButtonGroup, IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import LabelIcon from '@mui/icons-material/Label';
 import React, { useState } from 'react';
 import { createNewLabel } from '../../logic/apiRequest';
@@ -28,7 +29,7 @@ export default function LabelCreation(props: LabelCreationProps) {
   ) => {
     if (newColor !== null) {
       setLabelColor(Number(newColor));
-      if (labelTitle != '' && Number(newColor) > -1) {
+      if (labelTitle !== '' && Number(newColor) > -1) {
         setLabelInvalid(false);
       }
     }
@@ -52,6 +53,20 @@ export default function LabelCreation(props: LabelCreationProps) {
         padding: '30px',
       }}
       >
+        <div style={{ textAlign: 'right' }}>
+          <IconButton
+            color="primary"
+            aria-label="Close add label menu"
+            onClick={() => {
+              setLabelColor(-1);
+              setLabelTitle('');
+              setLabelInvalid(true);
+              props.setShowModal(false);
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
         <Typography id="title" variant="h2" style={{ textAlign: 'center' }}>
           Create Label
         </Typography>
@@ -63,7 +78,7 @@ export default function LabelCreation(props: LabelCreationProps) {
         value={labelTitle}
         onChange={(event) => {
           setLabelTitle(event.target.value);
-          if (event.target.value != '' && labelColor > -1) {
+          if (event.target.value !== '' && labelColor > -1) {
             setLabelInvalid(false);
           } else {
             setLabelInvalid(true);

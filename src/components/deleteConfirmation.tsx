@@ -1,6 +1,7 @@
 import {
-  Modal, Fade, Box, Typography, Button,
+  Modal, Fade, Box, Typography, Button, IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 interface DeleteConfirmationProps {
@@ -12,6 +13,8 @@ interface DeleteConfirmationProps {
 
 export default function DeleteConfirmation(props: DeleteConfirmationProps) {
   const handleClose = () => props.setShowModal(false);
+
+  const item = (props.itemString.length > 40) ? props.itemString.slice(0, 39).concat('..."') : props.itemString;
 
   return (
     <>
@@ -31,8 +34,20 @@ export default function DeleteConfirmation(props: DeleteConfirmationProps) {
         marginBottom: '10vh',
         padding: '30px',
       }}>
+        <div style={{ textAlign: 'right' }}>
+          <IconButton
+            color="primary"
+            aria-label="Close delete confirmation"
+            onClick={() => {
+              props.setResponse(false);
+              props.setShowModal(false);
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
       <Typography id="title" variant="h4" style={{ textAlign: 'center' }}>
-        Are you sure you want to delete {props.itemString}?
+        Are you sure you want to delete {item}?
       </Typography>
 
       <div style={{

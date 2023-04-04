@@ -2,15 +2,16 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 
-import TagPage from "../components/TagPage";
+import QuickAdd from "../components/QuickAdd";
 import { Provider } from 'react-redux';
 import { defaultStore } from '.././redux';
 
 export default {
-    component: TagPage,
-  } as ComponentMeta<typeof TagPage>;
+    component: QuickAdd,
+  } as ComponentMeta<typeof QuickAdd>;
 
-  const Template: ComponentStory<typeof TagPage> = (args) => <TagPage/>;
+  const Template: ComponentStory<typeof QuickAdd> = (args) => <QuickAdd
+  />; 
 
   export const DefaultStore = Template.bind({});
 

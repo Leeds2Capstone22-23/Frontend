@@ -130,7 +130,7 @@ export default function DocumentView() {
   // -----
   // USE EFFECT
   // -----
-  // Add the event listener for highlighted text to the window on load
+  // Add the event listener for highlighted text to the window on load (detect highlights)
   useEffect(() => {
     ['mouseup', 'dblclick'].forEach((curr) => {
       window.addEventListener(curr, (event) => {
@@ -298,10 +298,12 @@ export default function DocumentView() {
       </Box>
     );
   } else {
+    // "Add Snippet" button when you highlight text
     snippetOptions = (
       <Button
         onClick={async () => {
           setShowSnippetCreationOptions(true);
+          // will get the first instance of the highlighted string in the document
           const offset = currDocument.content!
             .indexOf(
               window.getSelection()?.getRangeAt(0)!.toString()!.replaceAll('\n\n', '\n')!,
@@ -334,6 +336,7 @@ export default function DocumentView() {
     );
   }
 
+  // actual components and html rendered
   if (documentStatus === Status.Succeeded && currDocument) {
     return (
         <>
@@ -400,11 +403,15 @@ export default function DocumentView() {
             </Paper>
         </>
     );
+
+  // no document found
   } if (documentStatus === Status.Succeeded) {
     return (
         <Page404 />
     );
   }
+
+  // loading
   return (
         <div style={{
           textAlign: 'center',

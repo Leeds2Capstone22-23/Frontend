@@ -2,11 +2,13 @@
 
 Once you have [npm installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), open a terminal in the project directory.
 
-## To run:
+## To run locally:
 
 ### `npm install` to download and install all packages
 
 ### `npm start` to compile and start development server
+
+In `\src\logic\apiRequest.tsx`, check that `const url` is set to `'http://localhost:8080/v1/graphql'` and not the development server. This requires the backend to also be running.
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 

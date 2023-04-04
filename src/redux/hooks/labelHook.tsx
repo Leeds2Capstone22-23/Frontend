@@ -9,15 +9,24 @@ import { AuthStatus } from './authHook';
  * STATUS
  */
 export function LabelStatus() {
-  return useSelector((state: RootStore) => state.rootReducer.labelStatusReducer);
+  return useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.labelStatusReducer;
+  });
 }
 
 /**
  * DATA
  */
 export function LabelData(forceRefresh = false) {
-  const labelsData = useSelector((state: RootStore) => state.rootReducer.labelDataReducer);
-  const labelsStatus = useSelector((state: RootStore) => state.rootReducer.labelStatusReducer);
+  const labelsData = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.labelDataReducer;
+  });
+  const labelsStatus = useSelector((state: RootStore) => {
+    const tmp = state as any;
+    return tmp.rootReducer.labelStatusReducer;
+  });
   const authStatus = AuthStatus();
   const dispatch = useDispatch();
 

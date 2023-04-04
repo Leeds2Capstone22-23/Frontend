@@ -1,6 +1,7 @@
 import {
-  Modal, Fade, Box, Typography, TextField, Button,
+  Modal, Fade, Box, Typography, TextField, Button, IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { createNewDocument } from '../../logic/apiRequest';
 
@@ -35,6 +36,20 @@ export default function DocumentCreation(props: DocumentCreationProps) {
         padding: '30px',
       }}
       >
+        <div style={{ textAlign: 'right' }}>
+          <IconButton
+            color="primary"
+            aria-label="Close add document menu"
+            onClick={() => {
+              setDocTitle('');
+              setDocContent('');
+              setDocInvalid(true);
+              props.setShowModal(false);
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </div>
         <Typography id="title" variant="h2" style={{ textAlign: 'center' }}>
           Create Document
         </Typography>
@@ -46,7 +61,7 @@ export default function DocumentCreation(props: DocumentCreationProps) {
         value={docTitle}
         onChange={(event) => {
           setDocTitle(event.target.value);
-          if (docContent != '' && event.target.value != '') {
+          if (docContent !== '' && event.target.value !== '') {
             setDocInvalid(false);
           } else {
             setDocInvalid(true);
@@ -64,7 +79,7 @@ export default function DocumentCreation(props: DocumentCreationProps) {
             value={docContent}
             onChange={(event) => {
               setDocContent(event.target.value);
-              if (event.target.value != '' && docTitle != '') {
+              if (event.target.value !== '' && docTitle !== '') {
                 setDocInvalid(false);
               } else {
                 setDocInvalid(true);
