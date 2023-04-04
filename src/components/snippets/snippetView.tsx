@@ -130,27 +130,36 @@ export default function SnippetView() {
         }}>
           { currSnip.text }
         </Card>
-        <Button
-          variant='outlined'
-          style={{
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}
-          onClick={() => {
-            navigator.clipboard.writeText(String(currSnip.text));
-          }}
-        >
-          Copy To Clipboard
-        </Button>
-        <Button
-          variant='outlined'
-          style={{
-            marginLeft: '10px',
-            marginRight: '10px',
-          }}
-        >
-          Find Similar with NLP
-        </Button>
+
+        <div style={{
+          marginTop: '10px',
+          marginLeft: '25%',
+          marginRight: '25%',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}>
+          <Button
+            variant='outlined'
+            style={{
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
+            onClick={() => {
+              navigator.clipboard.writeText(String(currSnip.text));
+            }}
+          >
+            Copy To Clipboard
+          </Button>
+          <Button
+            variant='outlined'
+            style={{
+              marginLeft: '10px',
+              marginRight: '10px',
+            }}
+          >
+            Find Similar with NLP
+          </Button>
+        </div>
       </div>
     </div>
     </>
