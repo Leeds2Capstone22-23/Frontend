@@ -394,6 +394,11 @@ export default function DocumentView() {
                 <Alert
                   severity="info"
                   variant="outlined"
+                  style={{
+                    maxWidth: '1000px',
+                    margin: 'auto',
+                    marginBottom: '10px',
+                  }}
                   action={
                     <IconButton
                       aria-label="close"
