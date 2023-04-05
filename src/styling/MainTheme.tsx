@@ -23,5 +23,17 @@ export const theme = createTheme({
   typography: {
     fontFamily: 'Helvetica',
   },
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#313139',
+        },
+        arrow: {
+          color: '#313139',
+        }
+      },
+    },
+  },
 
 });
