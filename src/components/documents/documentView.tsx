@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Collapse,
   FormControl,
   Grow,
   IconButton,
@@ -66,6 +67,7 @@ export default function DocumentView() {
   const [addSnippetStatus, setAddSnippetStatus] = useState(Status.Initial);
   const [showLabelCreation, setShowLabelCreation] = useState(false);
   const [refreshLabels, setRefreshLabels] = useState(false);
+  const [open, setOpen] = React.useState(true);
 
   // ** ROUTER **
   const { documentID } = useParams();
@@ -386,6 +388,30 @@ export default function DocumentView() {
                 </Paper>
               </Grow>
             </Popper>
+            {/* Snippet Creation Alert */}
+            <Box sx={{ width: '100%' }}>
+              <Collapse in={open}>
+                <Alert
+                  severity="info"
+                  variant="outlined"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
+                >
+                  Highlight text in your document to create a snippet!
+                </Alert>
+              </Collapse>
+            </Box>
             {/* Main Document Contents */}
             <Paper
                 style={{
