@@ -2,6 +2,7 @@
 
 Once you have [npm installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), open a terminal in the project directory.
 
+
 ## To run locally:
 
 ### `npm install` to download and install all packages
