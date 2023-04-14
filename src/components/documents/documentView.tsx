@@ -136,23 +136,24 @@ export default function DocumentView() {
   useEffect(() => {
     ['mouseup', 'dblclick'].forEach((curr) => {
       window.addEventListener(curr, (event) => {
-        if (showSnippetCreationOptionsRef.current !== true) {
-          if (
-            window.getSelection() !== null
-            && window.getSelection()!.toString().length > 0
-          ) {
-            event.preventDefault();
-            const detectHighightReturn = detectHighlight(event, window);
-            if (detectHighightReturn) {
-              setSelectionVirtualElement(detectHighightReturn);
+        setTimeout(() => {
+          if (showSnippetCreationOptionsRef.current !== true) {
+            if (
+              window.getSelection() !== null
+              && window.getSelection()!.toString().length > 0
+            ) {
+              const detectHighightReturn = detectHighlight(event, window);
+              if (detectHighightReturn) {
+                setSelectionVirtualElement(detectHighightReturn);
+              }
+              setShowSnippetCreation(true);
+            } else {
+              setShowSnippetCreation(false);
             }
-            setShowSnippetCreation(true);
           } else {
-            setShowSnippetCreation(false);
+            event.preventDefault();
           }
-        } else {
-          event.preventDefault();
-        }
+        }, 50);
       });
     });
   }, []);

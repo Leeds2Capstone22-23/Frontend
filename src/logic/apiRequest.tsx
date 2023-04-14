@@ -33,7 +33,7 @@ export async function fetchData(
   auth?:string,
 ) {
   // const url = 'http://localhost:8080/v1/graphql';
-  const url = 'https://leeds.jaryd.io/api/v1/';
+  const url = 'https://leeds-dev.jaryd.io/api/v1/';
   const tmp = defaultStore.getState() as any;
   const user = tmp.rootReducer.authDataReducer;
   const response = await fetch(
