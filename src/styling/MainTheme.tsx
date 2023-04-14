@@ -20,5 +20,20 @@ export const theme = createTheme({
     divider: '#34343B',
     mode: 'dark',
   },
+  typography: {
+    fontFamily: 'Helvetica',
+  },
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#313139',
+        },
+        arrow: {
+          color: '#313139',
+        }
+      },
+    },
+  },
 
 });
