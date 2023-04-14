@@ -92,6 +92,7 @@ export default function LabelBrowser() {
           keys: [
             'text',
             'documentTitle',
+            'labelName',
           ],
         })
           .search(newSearchQuery)
