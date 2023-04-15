@@ -33,7 +33,7 @@ export async function fetchData(
   auth?:string,
 ) {
   // const url = 'http://localhost:8080/v1/graphql';
-  const url = 'https://leeds-dev.jaryd.io/api/v1/';
+  const url = 'https://snpt.social/api/v1/';
   const tmp = defaultStore.getState() as any;
   const user = tmp.rootReducer.authDataReducer;
   const response = await fetch(
@@ -43,7 +43,7 @@ export async function fetchData(
       credentials: 'omit',
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'Access-Control-Allow-Origin': 'https://leeds.jaryd.io/',
+        'Access-Control-Allow-Origin': 'https://snpt.social/',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
         Authorization:
