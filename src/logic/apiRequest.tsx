@@ -55,6 +55,7 @@ export async function fetchData(
     },
   );
   const data = await response.json();
+
   return {
     data: (data.data) ? data.data : data.errors,
     status: response.status,
