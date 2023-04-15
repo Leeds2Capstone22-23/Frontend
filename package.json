@@ -68,8 +68,8 @@
     "lint": "eslint --ext .js,.ts,.tsx ./",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "deploy-dev": "git push snpt-dev@198.59.83.84:/home/snpt-dev/Frontend/frontend.git HEAD:master --force",
-    "deploy-prod": "git push snpt-prod@198.59.83.20:/home/snpt-prod/Frontend/frontend.git HEAD:master --force"
+    "deploy-dev": "git push snpt-dev@198.59.83.84:/home/snpt-dev/Frontend/frontend.git HEAD --force",
+    "deploy-prod": "git push snpt-prod@198.59.83.20:/home/snpt-prod/Frontend/frontend.git HEAD --force"
   },
   "browserslist": {
     "production": [

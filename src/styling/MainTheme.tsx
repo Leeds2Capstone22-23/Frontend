@@ -31,7 +31,7 @@ export const theme = createTheme({
         },
         arrow: {
           color: '#313139',
-        }
+        },
       },
     },
   },
