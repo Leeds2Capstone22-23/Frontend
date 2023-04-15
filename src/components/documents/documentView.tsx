@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Collapse,
   FormControl,
   Grow,
   IconButton,
@@ -66,6 +67,7 @@ export default function DocumentView() {
   const [addSnippetStatus, setAddSnippetStatus] = useState(Status.Initial);
   const [showLabelCreation, setShowLabelCreation] = useState(false);
   const [refreshLabels, setRefreshLabels] = useState(false);
+  const [open, setOpen] = React.useState(true);
 
   // ** ROUTER **
   const { documentID } = useParams();
@@ -134,23 +136,24 @@ export default function DocumentView() {
   useEffect(() => {
     ['mouseup', 'dblclick'].forEach((curr) => {
       window.addEventListener(curr, (event) => {
-        if (showSnippetCreationOptionsRef.current !== true) {
-          if (
-            window.getSelection() !== null
-            && window.getSelection()!.toString().length > 0
-          ) {
-            event.preventDefault();
-            const detectHighightReturn = detectHighlight(event, window);
-            if (detectHighightReturn) {
-              setSelectionVirtualElement(detectHighightReturn);
+        setTimeout(() => {
+          if (showSnippetCreationOptionsRef.current !== true) {
+            if (
+              window.getSelection() !== null
+              && window.getSelection()!.toString().length > 0
+            ) {
+              const detectHighightReturn = detectHighlight(event, window);
+              if (detectHighightReturn) {
+                setSelectionVirtualElement(detectHighightReturn);
+              }
+              setShowSnippetCreation(true);
+            } else {
+              setShowSnippetCreation(false);
             }
-            setShowSnippetCreation(true);
           } else {
-            setShowSnippetCreation(false);
+            event.preventDefault();
           }
-        } else {
-          event.preventDefault();
-        }
+        }, 50);
       });
     });
   }, []);
@@ -386,6 +389,35 @@ export default function DocumentView() {
                 </Paper>
               </Grow>
             </Popper>
+            {/* Snippet Creation Alert */}
+            <Box sx={{ width: '100%' }}>
+              <Collapse in={open}>
+                <Alert
+                  severity="info"
+                  variant="outlined"
+                  style={{
+                    maxWidth: '1000px',
+                    margin: 'auto',
+                    marginBottom: '10px',
+                  }}
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
+                >
+                  Highlight text in your document to create a snippet!
+                </Alert>
+              </Collapse>
+            </Box>
             {/* Main Document Contents */}
             <Paper
                 style={{

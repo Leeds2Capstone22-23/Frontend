@@ -108,7 +108,6 @@ export default function DocumentBrowser() {
           variant="filled"
           style={{ width: '100%', backgroundColor: '#0f0f17' }}
         />
-
         <div
           style={{
             maxHeight: '70vh',

@@ -4,8 +4,16 @@ import {
 import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
+
+// ICONS
+import DescriptionIcon from '@mui/icons-material/Description';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import MoreIcon from '@mui/icons-material/More';
+
 import redirect from '../logic/routerRedirect';
+import { AuthData } from '../redux/hooks/authHook';
 import { DocData, DocStatus } from '../redux/hooks/docHook';
 import { LabelData, LabelStatus } from '../redux/hooks/labelHook';
 import { SnippetData, SnippetStatus } from '../redux/hooks/snippetHook';
@@ -14,7 +22,8 @@ import { Status } from '../types/types';
 interface HomeCardProps {
   name: string,
   number: string,
-  status: Status
+  status: Status,
+  icon: JSX.Element
 }
 function HomeCard(props:HomeCardProps) {
   if (props.status === Status.Loading) {
@@ -26,6 +35,7 @@ function HomeCard(props:HomeCardProps) {
   }
   return (
                 <div>
+                {props.icon}
                 <Typography variant="h2" textAlign="center">
                     {props.number}
                 </Typography>
@@ -44,6 +54,7 @@ export default function Home() {
   const docStatus = DocStatus();
   const snippetData = SnippetData();
   const snippetStatus = SnippetStatus();
+  const authData = AuthData();
   return (
     <>
         <div style={{ height: '9vh' }} />
@@ -52,7 +63,7 @@ export default function Home() {
         </Typography>
         <div style={{ height: '20vh' }} />
         <Typography variant="h4" textAlign="center">
-            What would you like to work on today?
+            What would you like to work on today, {authData.username}?
         </Typography>
         <div style={{ height: '30vh' }} />
         <Grid container>
@@ -69,6 +80,7 @@ export default function Home() {
                             name={docData.length === 1 ? 'Document' : 'Documents'}
                             number={docData.length.toString()}
                             status={docStatus}
+                            icon=<DescriptionIcon />
                         />
                     </Button>
                 </div>
@@ -87,6 +99,7 @@ export default function Home() {
                             name={labelData.length === 1 ? 'Label' : 'Labels'}
                             number={labelData.length.toString()}
                             status={labelStatus}
+                            icon=<MoreIcon />
                         />
                     </Button>
                 </div>
@@ -105,6 +118,7 @@ export default function Home() {
                             name={snippetData.length === 1 ? 'Snippet' : 'Snippets'}
                             number={snippetData.length.toString()}
                             status={snippetStatus}
+                            icon=<ContentCutIcon />
                         />
                     </Button>
                 </div>
