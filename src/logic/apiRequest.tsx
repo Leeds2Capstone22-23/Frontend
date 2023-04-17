@@ -32,8 +32,8 @@ export async function fetchData(
   setErrors?:Function,
   auth?:string,
 ) {
-  // const url = 'http://localhost:8080/v1/graphql';
-  const url = 'https://leeds-dev.jaryd.io/api/v1/';
+  const url = 'http://localhost:8080/v1/graphql';
+  // const url = 'https://leeds.jaryd.io/api/v1/';
   const tmp = defaultStore.getState() as any;
   const user = tmp.rootReducer.authDataReducer;
   const response = await fetch(
@@ -535,5 +535,27 @@ export async function deleteDocument(
       } else {
         setStatus(Status.Failed);
       }
+    });
+}
+
+/*
+  +++++++++++++++++++++++++++++++++++++++
+  NLP CALLS (i don't know how to do bubble letter ascii :( )
+  +++++++++++++++++++++++++++++++++++++++
+*/
+
+export async function nlpHelloWorld() {
+  await fetchData(
+    `
+      query {
+        nlp_hello_world {
+          message
+        }
+      }
+    `,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      console.log(result.data);
     });
 }
