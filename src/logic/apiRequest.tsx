@@ -548,14 +548,14 @@ export async function nlpHelloWorld() {
   await fetchData(
     `
       query {
-        nlp_hello_world {
-          message
+        nlp_job_status(job_name: "mveatpjloxkdtevafwcupmecztkbtmqjfflqhyqavfdqynfsbj") {
+          job_name
         }
       }
     `,
   )
     .then((result) => {
       // Convert to appropriate data type
-      console.log(result.data);
+      console.log(result.data.nlp_job_status.job_name);
     });
 }
