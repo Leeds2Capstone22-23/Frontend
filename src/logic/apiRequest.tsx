@@ -258,6 +258,7 @@ export async function retrieveAllSnippetsDebounced(dispatch: Function) {
           label_id
           length
           char_offset
+          nlp_job_name
         }
       }`,
   )
@@ -557,5 +558,93 @@ export async function nlpHelloWorld() {
     .then((result) => {
       // Convert to appropriate data type
       console.log(result.data.nlp_job_status.job_name);
+    });
+}
+
+export async function nlpSearch(
+  description: string,
+  snippet: string,
+  subreddit: string,
+) {
+  await fetchData(
+    `
+      query {
+        nlp_search(description: "${description}", filter_keywords: "", search_string: "${snippet}", subreddits: "${subreddit}") {
+          status
+          errors
+          job_name
+        }
+      }
+    `,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      console.log(result.data.nlp_job_status.job_name);
+      if (result.data && result.data.nlp_search.job_name) {
+        return result.data.nlp_search.job_name;
+      }
+      return null;
+    });
+}
+
+export async function checkJobStatus(
+  jobName: string,
+) {
+  await fetchData(
+    `
+    query {
+      nlp_job_status(job_name: "${jobName}") {
+        job_name
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        return result.data.nlp_job_status.job_name;
+      }
+      return null;
+    });
+}
+
+export async function retrieveJobResults(
+  jobName: string,
+) {
+  await fetchData(
+    `
+    query {
+      nlp_finished_job(job_name: "${jobName}") {
+        response
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        return result.data.nlp_finished_job.response;
+      }
+      return null;
+    });
+}
+
+// mutation
+export async function addSnippetJob(
+  snippetID: number,
+  jobName: string,
+  setRefreshSnippets: Function,
+) {
+  await fetchData(
+    `
+    mutation {
+      update_snippets(where: {id: {_eq: "${snippetID}"}}, _set: {nlp_job_name: "${jobName}"}) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setRefreshSnippets(true);
+      }
     });
 }

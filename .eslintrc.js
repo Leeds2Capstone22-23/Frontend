@@ -20,6 +20,7 @@ module.exports = {
     'no-new': 0,
     'import/no-extraneous-dependencies': 0,
     'import/extensions': 'off',
+    'linebreak-style': 0,
     // Allow _vars to be ignored
     'no-unused-vars': 0,
     'no-underscore-dangle': 0,
