@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DescriptionIcon from '@mui/icons-material/Description';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import LabelIcon from '@mui/icons-material/Label';
 import SearchIcon from '@mui/icons-material/Search';
 import Fuse from 'fuse.js';
@@ -42,6 +44,7 @@ export default function LabelView() {
     text: string,
     documentID: number,
     documentTitle: string,
+    jobName: string,
   }
 
   function generateSnippets():SnippetDisplay[] {
@@ -69,6 +72,7 @@ export default function LabelView() {
           text: snippetContent,
           documentID: doc.id,
           documentTitle: doc.title,
+          jobName: currSnippet.jobName,
         });
       }
     });
@@ -203,7 +207,8 @@ export default function LabelView() {
                     <Button
                       key={currSnip.id}
                       href={`/documents/${currSnip.documentID}`}
-                      style={{
+
+                      style= {{
                         height: '50px',
                         width: '15%',
                         textTransform: 'none',
@@ -218,8 +223,7 @@ export default function LabelView() {
                       <Stack sx={{ width: '100%', justifyContent: 'left' }}>
                         <div style={{
                           height: '50%', width: '100%', whiteSpace: 'nowrap',
-                        }}
-                        >
+                        }}>
                           <DescriptionIcon
                             sx={{
                               fontSize: '20px',
@@ -233,21 +237,20 @@ export default function LabelView() {
                             variant="body2"
                             textAlign="left"
                             style={{
-                              maxWidth: '75%',
+                              width: '75%',
                               verticalAlign: 'middle',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
                               display: 'inline-block',
                             }}
-                          >
+                            >
                             {currSnip.documentTitle}
                           </Typography>
                         </div>
                         <div style={{
                           height: '50%', width: '100%', whiteSpace: 'nowrap',
-                        }}
-                        >
+                        }}>
                           <LabelIcon
                             sx={{
                               color:
@@ -265,7 +268,7 @@ export default function LabelView() {
                             variant="body1"
                             textAlign="left"
                             style={{
-                              maxWidth: '75%',
+                              width: '75%',
                               verticalAlign: 'middle',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
@@ -279,11 +282,14 @@ export default function LabelView() {
                       </Stack>
                     </Button>
                   </Tooltip>
-                  <div style={{
-                    maxWidth: '85%',
+                  <div
+                  style={{
+                    width: '80%',
+                    marginRight: '10px',
                     textAlign: 'left',
-                  }}>
-                    <Button
+                  }}
+                    >
+                      <Button
                       key={currSnip.id}
                       href={`/snippets/${currSnip.id}`}
                       style= {{
@@ -306,9 +312,34 @@ export default function LabelView() {
                           textOverflow: 'ellipsis',
                         }}
                         >
-                          {currSnip.text}
+                        {currSnip.text}
                       </Typography>
                     </Button>
+                  </div>
+                  <div>
+                    { currSnip.jobName ? <Tooltip title='Searched' placement='top'>
+                      <TaskAltIcon
+                        sx={{
+                          color: 'green',
+                          fontSize: '20px',
+                          verticalAlign: 'middle',
+                          marginRight: '10px',
+                          display: 'inline-block',
+                        }}
+                      />
+                    </Tooltip>
+                      : <Tooltip key={currSnip.id} title='Not yet searched' placement='top'>
+                      <ErrorOutlineIcon
+                        sx={{
+                          color: 'white',
+                          fontSize: '20px',
+                          verticalAlign: 'middle',
+                          marginRight: '10px',
+                          display: 'inline-block',
+                        }}
+                      />
+                    </Tooltip>
+                  }
                   </div>
                 </Card>
 
