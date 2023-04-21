@@ -565,6 +565,8 @@ export async function nlpSearch(
   description: string,
   snippet: string,
   subreddit: string,
+  setJob: Function,
+  setUpdateSnippet: Function,
 ) {
   await fetchData(
     `
@@ -579,11 +581,14 @@ export async function nlpSearch(
   )
     .then((result) => {
       // Convert to appropriate data type
-      console.log(result.data.nlp_job_status.job_name);
+      console.log(result);
       if (result.data && result.data.nlp_search.job_name) {
-        return result.data.nlp_search.job_name;
+        setJob(result.data.nlp_search.job_name);
+        setUpdateSnippet(true);
       }
-      return null;
+    })
+    .catch(() => {
+      console.log('something went wrong');
     });
 }
 
@@ -609,6 +614,7 @@ export async function checkJobStatus(
 
 export async function retrieveJobResults(
   jobName: string,
+  setResults: Function,
 ) {
   await fetchData(
     `
@@ -620,10 +626,10 @@ export async function retrieveJobResults(
     `,
   )
     .then((result) => {
+      console.log(result);
       if (result.data) {
-        return result.data.nlp_finished_job.response;
+        setResults(result.data.nlp_finished_job.response);
       }
-      return null;
     });
 }
 

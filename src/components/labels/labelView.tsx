@@ -72,7 +72,7 @@ export default function LabelView() {
           text: snippetContent,
           documentID: doc.id,
           documentTitle: doc.title,
-          jobName: currSnippet.jobName,
+          jobName: currSnippet.nlp_job_name,
         });
       }
     });
