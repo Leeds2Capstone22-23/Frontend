@@ -545,22 +545,6 @@ export async function deleteDocument(
   +++++++++++++++++++++++++++++++++++++++
 */
 
-export async function nlpHelloWorld() {
-  await fetchData(
-    `
-      query {
-        nlp_job_status(job_name: "mveatpjloxkdtevafwcupmecztkbtmqjfflqhyqavfdqynfsbj") {
-          job_name
-        }
-      }
-    `,
-  )
-    .then((result) => {
-      // Convert to appropriate data type
-      console.log(result.data.nlp_job_status.job_name);
-    });
-}
-
 export async function nlpSearch(
   description: string,
   snippet: string,
@@ -581,19 +565,16 @@ export async function nlpSearch(
   )
     .then((result) => {
       // Convert to appropriate data type
-      console.log(result);
       if (result.data && result.data.nlp_search.job_name) {
         setJob(result.data.nlp_search.job_name);
         setUpdateSnippet(true);
       }
-    })
-    .catch(() => {
-      console.log('something went wrong');
     });
 }
 
 export async function checkJobStatus(
   jobName: string,
+  setJobStatus: Function,
 ) {
   await fetchData(
     `
@@ -606,9 +587,8 @@ export async function checkJobStatus(
   )
     .then((result) => {
       if (result.data) {
-        return result.data.nlp_job_status.job_name;
+        setJobStatus(result.data.nlp_job_status.job_name);
       }
-      return null;
     });
 }
 
@@ -626,7 +606,6 @@ export async function retrieveJobResults(
     `,
   )
     .then((result) => {
-      console.log(result);
       if (result.data) {
         setResults(result.data.nlp_finished_job.response);
       }

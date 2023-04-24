@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
-import { loginUser, nlpHelloWorld, registerNewUser } from '../logic/apiRequest';
+import { loginUser, registerNewUser } from '../logic/apiRequest';
 import { AuthStatus } from '../redux/hooks/authHook';
 import { newUserLogin, newUserRegistration, Status } from '../types/types';
 import '../styling/main.css';
@@ -33,8 +33,6 @@ export default function AuthHandler() {
   const [errorMessage, setErrorMessage] = useState('');
 
   let authContent;
-
-  nlpHelloWorld();
 
   // Show Registration or Login Page depending on selection
   if (authType === 'none') {

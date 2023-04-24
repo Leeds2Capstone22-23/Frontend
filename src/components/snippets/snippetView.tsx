@@ -3,16 +3,24 @@ import {
   Card,
   Typography,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import LabelIcon from '@mui/icons-material/Label';
 import DescriptionIcon from '@mui/icons-material/Description';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox'; // for future use
 import { colors } from '../../styling/Colors';
 import { DocData } from '../../redux/hooks/docHook';
 import { LabelData } from '../../redux/hooks/labelHook';
 import { SnippetData } from '../../redux/hooks/snippetHook';
-import { addSnippetJob, nlpSearch, retrieveJobResults } from '../../logic/apiRequest';
+import {
+  addSnippetJob,
+  checkJobStatus,
+  nlpSearch,
+  retrieveJobResults,
+} from '../../logic/apiRequest';
 
 export default function SnippetView() {
   const { snippetID } = useParams();
@@ -55,12 +63,13 @@ export default function SnippetView() {
 
   const [snippetJob, setSnippetJob] = useState(currSnip.jobName);
   const [updateSnippet, setUpdateSnippet] = useState(false);
+  const [jobStatus, setJobStatus] = useState('waiting');
   if (snippetJob && !jobData) {
     retrieveJobResults(snippetJob, setJobData);
   }
 
   function startSearch() {
-    nlpSearch('SNPT search', currSnip.text, 'cuboulder', setSnippetJob, setUpdateSnippet);
+    nlpSearch('SNPT search', currSnip.text, 'cuboulder,college', setSnippetJob, setUpdateSnippet);
   }
 
   useEffect(() => {
@@ -76,6 +85,15 @@ export default function SnippetView() {
       retrieveJobResults(snippetJob, setJobData);
     }
   }, [refreshSnippets]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (snippetJob && jobData.length === 0) {
+        retrieveJobResults(snippetJob, setJobData);
+      }
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -204,7 +222,52 @@ export default function SnippetView() {
           }
         </div>
         <div>
-          <Typography>{jobData.length} result(s)</Typography>
+          {currSnip.jobName ? <Typography>{jobData.length} result(s)</Typography>
+            : <></> }
+        </div>
+        <div
+          style={{
+            maxHeight: '80vh',
+            minHeight: '0px',
+            overflowY: 'scroll',
+            paddingTop: '20px',
+          }}
+        >
+          {
+            jobData.map((result, index) => (
+              <div key={ index }>
+                <Card
+                  style={{
+                    marginTop: '5px',
+                    marginRight: '10px',
+                    padding: '15px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    width: '90%',
+                  }}
+                >
+                  <Stack>
+                    <Typography variant='body1' fontWeight='bold'>
+                      { Math.round(parseFloat((result as any).cosine_similarity) * 100) }% similar - { (result as any).author }
+                      , reddit.com{ (result as any).permalink }
+                    </Typography>
+                    <Typography variant='body2' padding='10px'> { (result as any).body } </Typography>
+                  </Stack>
+                </Card>
+                <Tooltip title='Add to Documents' placement='right'>
+                  <Button disabled>
+                    <AddBoxIcon
+                      sx={{
+                        fontSize: '50px',
+                        verticalAlign: 'middle',
+                        display: 'inline-block',
+                      }}
+                    />
+                  </Button>
+                </Tooltip>
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
