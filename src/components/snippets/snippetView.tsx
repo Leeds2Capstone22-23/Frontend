@@ -4,7 +4,10 @@ import {
   Typography,
   Stack,
   Tooltip,
+  CircularProgress,
+  IconButton,
 } from '@mui/material';
+import LinearProgress from '@mui/material/LinearProgress';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import LabelIcon from '@mui/icons-material/Label';
@@ -21,6 +24,7 @@ import {
   nlpSearch,
   retrieveJobResults,
 } from '../../logic/apiRequest';
+import { Status } from '../../types/types';
 
 export default function SnippetView() {
   const { snippetID } = useParams();
@@ -64,6 +68,7 @@ export default function SnippetView() {
 
   const [snippetJob, setSnippetJob] = useState(currSnip.jobName);
   const [updateSnippet, setUpdateSnippet] = useState(false);
+  const [snippetStatus, setSnippetStatus] = useState(Status.Initial);
   if (snippetJob && !jobData) {
     retrieveJobResults(snippetJob, setJobData);
   }
@@ -111,10 +116,13 @@ export default function SnippetView() {
     const interval = setInterval(() => {
       if (snippetJob && jobData.length === 0) {
         retrieveJobResults(snippetJob, setJobData);
+      } else {
+        setSnippetStatus(Status.Succeeded);
+        clearInterval(interval);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [jobData, snippetJob, snippetStatus]);
 
   return (
     <>
@@ -235,6 +243,7 @@ export default function SnippetView() {
                 marginRight: '10px',
               }}
               onClick={() => {
+                setSnippetStatus(Status.Loading);
                 startSearch();
               }}
             >
@@ -242,6 +251,28 @@ export default function SnippetView() {
             </Button>
           }
         </div>
+        {(snippetStatus === Status.Loading) ? (
+          <div style={{
+            textAlign: 'center',
+            margin: '25px',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            height: '15vh',
+          }}>
+              <Typography variant="h4" textAlign="center">
+                  Searching Snippet
+              </Typography>
+              <div style={{ padding: '20px' }} />
+              <CircularProgress/>
+              <div style={{ padding: '20px' }} />
+              <Typography variant="h4" textAlign="center">
+                  This may take a minute.
+              </Typography>
+          </div>
+        ) : (
+          <>
         <div>
           {currSnip.jobName ? <Typography>{jobData.length} result(s)</Typography>
             : <></> }
@@ -269,13 +300,48 @@ export default function SnippetView() {
                 >
                   <Stack>
                     <Typography variant='body1' fontWeight='bold'>
+                    <div
+                        style={{
+                          padding: '10px',
+                        }}
+                      >
+                      <LinearProgress
+                        variant="determinate"
+                        value={Math.round(parseFloat((result as any).cosine_similarity) * 100)}
+                      />
+                    </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          padding: '10px',
+                        }}
+                      >
                       { Math.round(parseFloat((result as any).cosine_similarity) * 100) }
                       % similar - { (result as any).author }
-                      , reddit.com{ (result as any).permalink }
+                      <Button
+                        variant='outlined'
+                        href={`https://reddit.com/${(result as any).permalink}`}>
+                          View Post
+                        </Button>
+                      </div>
                     </Typography>
+
+                    <Card
+                      style={{
+                        margin: 'auto',
+                        padding: '15px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        width: '90%',
+                        background: '#fff1',
+                      }}
+                    >
                     <Typography variant='body2' padding='10px'>
+
                       { (result as any).body }
                     </Typography>
+                    </Card>
                   </Stack>
                 </Card>
                 <Tooltip title='Add to Documents' placement='right'>
@@ -296,6 +362,8 @@ export default function SnippetView() {
             ))
           }
         </div>
+        </>
+        )}
       </div>
     </div>
     </>
