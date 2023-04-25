@@ -17,7 +17,7 @@ import { LabelData } from '../../redux/hooks/labelHook';
 import { SnippetData } from '../../redux/hooks/snippetHook';
 import {
   addSnippetJob,
-  checkJobStatus,
+  createNewDocument,
   nlpSearch,
   retrieveJobResults,
 } from '../../logic/apiRequest';
@@ -25,10 +25,11 @@ import {
 export default function SnippetView() {
   const { snippetID } = useParams();
   const [refreshSnippets, setRefreshSnippets] = useState(false);
+  const [refreshDocs, setRefreshDocs] = useState(false);
   const [jobData, setJobData] = useState([]);
 
   // ** REDUX **
-  const documentData = DocData();
+  const documentData = DocData(refreshDocs);
   const snippetData = SnippetData(refreshSnippets);
   const labelData = LabelData();
 
@@ -63,13 +64,27 @@ export default function SnippetView() {
 
   const [snippetJob, setSnippetJob] = useState(currSnip.jobName);
   const [updateSnippet, setUpdateSnippet] = useState(false);
-  const [jobStatus, setJobStatus] = useState('waiting');
   if (snippetJob && !jobData) {
     retrieveJobResults(snippetJob, setJobData);
   }
 
   function startSearch() {
     nlpSearch('SNPT search', currSnip.text, 'cuboulder,college', setSnippetJob, setUpdateSnippet);
+  }
+
+  function searchTitle(id: string) {
+    return (documentData.find((curr) => curr.title === 'REDDIT_POST-'.concat(id)));
+  }
+
+  function savePost(result) {
+    createNewDocument(
+      () => {},
+      {
+        title: 'REDDIT_POST-'.concat(result.id),
+        content: JSON.stringify(result),
+      },
+      setRefreshDocs,
+    );
   }
 
   useEffect(() => {
@@ -87,11 +102,17 @@ export default function SnippetView() {
   }, [refreshSnippets]);
 
   useEffect(() => {
+    if (refreshDocs) {
+      setRefreshDocs(false);
+    }
+  }, [refreshDocs]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       if (snippetJob && jobData.length === 0) {
         retrieveJobResults(snippetJob, setJobData);
       }
-    }, 2000);
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -248,14 +269,20 @@ export default function SnippetView() {
                 >
                   <Stack>
                     <Typography variant='body1' fontWeight='bold'>
-                      { Math.round(parseFloat((result as any).cosine_similarity) * 100) }% similar - { (result as any).author }
+                      { Math.round(parseFloat((result as any).cosine_similarity) * 100) }
+                      % similar - { (result as any).author }
                       , reddit.com{ (result as any).permalink }
                     </Typography>
-                    <Typography variant='body2' padding='10px'> { (result as any).body } </Typography>
+                    <Typography variant='body2' padding='10px'>
+                      { (result as any).body }
+                    </Typography>
                   </Stack>
                 </Card>
                 <Tooltip title='Add to Documents' placement='right'>
-                  <Button disabled>
+                  <Button
+                    disabled={searchTitle((result as any).id)}
+                    onClick={() => savePost(result) }
+                  >
                     <AddBoxIcon
                       sx={{
                         fontSize: '50px',
