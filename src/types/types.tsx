@@ -44,6 +44,7 @@ export interface Snippet {
   label_id: number,
   length: number,
   char_offset: number,
+  nlp_job_name: string,
 }
 
 export interface NewSnippet {

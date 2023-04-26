@@ -259,6 +259,7 @@ export async function retrieveAllSnippetsDebounced(dispatch: Function) {
           label_id
           length
           char_offset
+          nlp_job_name
         }
       }`,
   )
@@ -535,6 +536,101 @@ export async function deleteDocument(
         setRefreshDocuments(true);
       } else {
         setStatus(Status.Failed);
+      }
+    });
+}
+
+/*
+  +++++++++++++++++++++++++++++++++++++++
+  NLP CALLS (i don't know how to do bubble letter ascii :( )
+  +++++++++++++++++++++++++++++++++++++++
+*/
+
+export async function nlpSearch(
+  description: string,
+  snippet: string,
+  subreddit: string,
+  setJob: Function,
+  setUpdateSnippet: Function,
+) {
+  await fetchData(
+    `
+      query {
+        nlp_search(description: "${description}", filter_keywords: "", search_string: "${snippet}", subreddits: "${subreddit}") {
+          status
+          errors
+          job_name
+        }
+      }
+    `,
+  )
+    .then((result) => {
+      // Convert to appropriate data type
+      if (result.data && result.data.nlp_search.job_name) {
+        setJob(result.data.nlp_search.job_name);
+        setUpdateSnippet(true);
+      }
+    });
+}
+
+export async function checkJobStatus(
+  jobName: string,
+  setJobStatus: Function,
+) {
+  await fetchData(
+    `
+    query {
+      nlp_job_status(job_name: "${jobName}") {
+        job_name
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setJobStatus(result.data.nlp_job_status.job_name);
+      }
+    });
+}
+
+export async function retrieveJobResults(
+  jobName: string,
+  setResults: Function,
+) {
+  await fetchData(
+    `
+    query {
+      nlp_finished_job(job_name: "${jobName}") {
+        response
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setResults(result.data.nlp_finished_job.response);
+      }
+    });
+}
+
+// mutation
+export async function addSnippetJob(
+  snippetID: number,
+  jobName: string,
+  setRefreshSnippets: Function,
+) {
+  await fetchData(
+    `
+    mutation {
+      update_snippets(where: {id: {_eq: "${snippetID}"}}, _set: {nlp_job_name: "${jobName}"}) {
+        affected_rows
+      }
+    }
+    `,
+  )
+    .then((result) => {
+      if (result.data) {
+        setRefreshSnippets(true);
       }
     });
 }

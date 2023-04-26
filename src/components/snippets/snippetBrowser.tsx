@@ -12,6 +12,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LabelIcon from '@mui/icons-material/Label';
 import DescriptionIcon from '@mui/icons-material/Description';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import redirect from '../../logic/routerRedirect';
@@ -46,6 +48,7 @@ export default function LabelBrowser() {
     text: string,
     documentID: number,
     documentTitle: string,
+    jobName: string,
   }
 
   function generateSnippets():SnippetDisplay[] {
@@ -69,6 +72,7 @@ export default function LabelBrowser() {
           text: snippetContent,
           documentID: doc.id,
           documentTitle: doc.title,
+          jobName: currSnippet.nlp_job_name,
         });
       }
     });
@@ -92,6 +96,7 @@ export default function LabelBrowser() {
           keys: [
             'text',
             'documentTitle',
+            'labelName',
           ],
         })
           .search(newSearchQuery)
@@ -208,7 +213,7 @@ export default function LabelBrowser() {
                         variant="body2"
                         textAlign="left"
                         style={{
-                          maxWidth: '75%',
+                          width: '75%',
                           verticalAlign: 'middle',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
@@ -239,7 +244,7 @@ export default function LabelBrowser() {
                         variant="body1"
                         textAlign="left"
                         style={{
-                          maxWidth: '75%',
+                          width: '75%',
                           verticalAlign: 'middle',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
@@ -255,35 +260,62 @@ export default function LabelBrowser() {
               </Tooltip>
               <div
               style={{
-                maxWidth: '85%',
+                width: '80%',
+                marginRight: '10px',
                 textAlign: 'left',
               }}
-                ><Button
-                key={currSnip.id}
-                href={`/snippets/${currSnip.id}`}
-                style= {{
-                  height: '50px',
-                  textTransform: 'none',
-                  maxWidth: '100%',
-                }}
-                onClick={(event) => {
-                  redirect(event, `/snippets/${currSnip.id}`, navigate);
-                }}
-              >
-                <Typography
-                  variant="body1"
-                  textAlign="left"
-                  style={{
-                    maxHeight: '50px',
-                    whiteSpace: 'nowrap',
-                    verticalAlign: 'middle',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                >
+                  <Button
+                  key={currSnip.id}
+                  href={`/snippets/${currSnip.id}`}
+                  style= {{
+                    height: '50px',
+                    textTransform: 'none',
+                    maxWidth: '100%',
                   }}
-                  >
-                  {currSnip.text}
-                </Typography>
-              </Button>
+                  onClick={(event) => {
+                    redirect(event, `/snippets/${currSnip.id}`, navigate);
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    textAlign="left"
+                    style={{
+                      maxHeight: '50px',
+                      whiteSpace: 'nowrap',
+                      verticalAlign: 'middle',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                    >
+                    {currSnip.text}
+                  </Typography>
+                </Button>
+              </div>
+              <div>
+                { currSnip.jobName ? <Tooltip title='Searched' placement='top'>
+                  <TaskAltIcon
+                    sx={{
+                      color: 'green',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginRight: '10px',
+                      display: 'inline-block',
+                    }}
+                  />
+                </Tooltip>
+                  : <Tooltip key={currSnip.id} title='Not yet searched' placement='top'>
+                  <ErrorOutlineIcon
+                    sx={{
+                      color: 'white',
+                      fontSize: '20px',
+                      verticalAlign: 'middle',
+                      marginRight: '10px',
+                      display: 'inline-block',
+                    }}
+                  />
+                </Tooltip>
+              }
               </div>
             </Card>
 

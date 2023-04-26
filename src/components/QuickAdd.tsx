@@ -1,10 +1,10 @@
 import {
-  Box, Typography, Button,
+  Alert, Box, Typography, Button,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { DocData } from '../redux/hooks/docHook';
 import { LabelData } from '../redux/hooks/labelHook';
-
+import { Status } from '../types/types';
 import DocumentCreation from './documents/documentCreation';
 import LabelCreation from './labels/labelCreation';
 
@@ -13,6 +13,7 @@ export default function QuickAdd() {
   const [showLabelCreation, setShowLabelCreation] = useState(false);
   const [refreshDocs, setRefreshDocs] = useState(false);
   const [refreshLabels, setRefreshLabels] = useState(false);
+  const [addItemStatus, setAddItemStatus] = useState(Status.Initial);
 
   // need these here so data gets updated immediately
   // eslint-disable-next-line
@@ -22,12 +23,14 @@ export default function QuickAdd() {
 
   useEffect(() => {
     if (refreshDocs) {
+      setAddItemStatus(Status.Succeeded); // assume that it was successful
       setRefreshDocs(false);
     }
   }, [refreshDocs]);
 
   useEffect(() => {
     if (refreshLabels) {
+      setAddItemStatus(Status.Succeeded);
       setRefreshLabels(false);
     }
   }, [refreshLabels]);
@@ -45,6 +48,26 @@ export default function QuickAdd() {
       setRefreshDocs={setRefreshLabels}
       />
 
+    <Box
+      style={{
+        background: '#1c1b21',
+        maxWidth: '500px',
+        height: '50px',
+        margin: 'auto',
+        padding: '30px',
+      }}>
+    {(addItemStatus === Status.Succeeded)
+      ? (
+      <Alert
+        style={{ maxWidth: '500px', margin: 'auto' }}
+        onClose={() => {
+          setAddItemStatus(Status.Initial);
+        }}
+        severity="success">
+          Item Created Successfully
+        </Alert>)
+      : (<></>)}
+    </Box>
     <Box
       style={{
         background: '#1c1b21',

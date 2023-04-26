@@ -48,7 +48,7 @@ export default function LabelBrowser() {
         new Fuse(labelData, {
           threshold: 0.3,
           keys: [
-            'title',
+            'name',
           ],
         })
           .search(newSearchQuery)
